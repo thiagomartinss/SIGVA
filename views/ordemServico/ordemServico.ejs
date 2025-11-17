@@ -21,7 +21,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="../marca"><i class="fa-solid fa-tags fa-fw"></i> Marcas</a>
             </li>
-             <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link" href="../pessoa"><i class="fa-solid fa-user fa-fw"></i> Pessoas</a>
             </li>
             <hr />
@@ -64,15 +64,17 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-floating mb-3 dropdown-search">
-                            <button class="btn btn-outline-primary w-100 dropdown-toggle" type="button" id="PessoaBtn">Selecionar o Cliente</button>
+                            <button class="btn btn-outline-primary w-100 dropdown-toggle" type="button"
+                                id="PessoaBtn">Selecionar o Cliente</button>
                             <div class="dropsown-menu p-2" id="PessoaMenu">
-                                <input type="text" class=" form-control search-input mb-2" placeholder="Pesquisar cliente ..." id="pesquisaPessoa">
+                                <input type="text" class=" form-control search-input mb-2"
+                                    placeholder="Pesquisar cliente ..." id="pesquisaPessoa">
                                 <div id="dropPessoaItem">
-                                    <%//listaPessoas.foreach/map(function(pessoa){)%>
+                                    <% //listaPessoas.foreach/map(function(pessoa){)%>
                                         <div class="dropdown-item" data-id="<%//pessoa.pessoaId%>">
-                                            <%//=pessoa.pessoaId%>
+                                            <% //=pessoa.pessoaId%>
                                         </div>
-                                        <%//})%>
+                                        <% //})%>
                                 </div>
                             </div>
                             <input type="hidden" name="pessoaId" id="pessoaId" required>
@@ -110,27 +112,29 @@
                                 <div class="row">
                                     <% listaEquipamentos.map(function(equipamento) { %>
                                         <div class="col-md-4">
-                                            <div class="form-check mt-3">
-                                                <!--pego essa classe boxbox para usar na quant-->
+                                            <div class="d-flex align-items-center gap-2 mt-3">
+
+                                                
                                                 <input
                                                     class="form-check-input border border-2 border-primary equipamento-checkbox"
                                                     type="checkbox" id="equipamentoqntd"
-                                                    data-id="<%=equipamento.equipamentoId%>"
-                                                    value="<%=equipamento.equipamentoId%>">
-                                                <!--usarei para mandar a quantidade -->
+                                                    data-id="<%= equipamento.equipamentoId %>"
+                                                    value="<%= equipamento.equipamentoId %>">
 
-                                                <label class="form-check-label fw-bold">
-                                                    <%=equipamento.equipamentoNome%>
+                                                
+                                                <label class="form-check-label fw-bold mb-0 ms-1">
+                                                    <%= equipamento.equipamentoNome %>
                                                 </label>
-                                                <!--uso a classe quantidade-box so aparece se marcar o campo do equip-->
-                                                <div class="form-floating mb-3 mt-1 quantidade-wrap"
+
+                                               
+                                                <div class="quantidade-wrap   border-2 border-primary" aria-placeholder="quantidade"
                                                     id="quant-wrapp<%= equipamento.equipamentoId %>"
-                                                    style="display: none;">
-                                                    <input type="number" class="form-control"
-                                                        id="quant_<%= equipamento.equipamentoId %>">
-                                                    <label
-                                                        for="quant_<%= equipamento.equipamentoId %>">Quantidade</label>
+                                                    style="display: none; margin-left: 8px;">
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        id="quant_<%= equipamento.equipamentoId %>"  style="width: 60px;"
+                                                        min="1" value="1">
                                                 </div>
+
                                             </div>
                                         </div>
                                         <% }) %>
@@ -159,20 +163,20 @@
                                                 <!--usarei para mandar a quantidade -->
 
                                                 <label class="form-check-label fw-bold">
-                                                    <%=//produto.produtoNome%>
+                                                    <%= //produto.produtoNome%>
                                                 </label>
                                                 <!--uso a classe quantidade-box so aparece se marcar o campo do equip-->
+
                                                 <div class="form-floating mb-3 mt-1 quantidade-wrap"
-                                                    id="quant-wrapp<%=// produto.produtoId %>"
-                                                    style="display: none;">
+                                                    id="quant-wrapp<%=// produto.produtoId %>" style="display: none;">
                                                     <input type="number" class="form-control"
                                                         id="quant_<%=// produto.produtoId %>">
-                                                    <label
-                                                        for="quant_<%=// produto.produtoId %>">Quantidade</label>
+                                                    <label for="quant_<%=// produto.produtoId %>">Quantidade
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <%// }) %>
+                                        <% // }) %>
                                 </div>
                             </div>
 

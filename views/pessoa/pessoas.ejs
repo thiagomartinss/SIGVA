@@ -74,27 +74,29 @@
                                     id="checkedPJ">
                                 <label class="form-check-label" for="checkedPJ" id="lb-checkedPJ" >Pessoa Jurídica</label>
                             </div>
+                            <span class="text-danger" id="msg-checkPessoa"></span>
                             <div id="camposPF" style="display:none;">
                                 <h5 class="mt-3">Dados Pessoa Física</h5>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <!--coluna com os inputs, o 6 significa q ocupa metade da linha-->
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="nome" placeholder="Nome">
-                                            <label for="nome">Nome</label>
+                                            <input type="text" class="form-control text-uppercase" id="nome" placeholder="Nome" required>
+                                            <label for="nome">Nome Completo</label>
+                                            <span class="text-danger" id="msg-nome"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="cpf" placeholder="CPF">
+                                            <input type="text" class="form-control" id="cpf" placeholder="CPF" maxlength="14" required>
                                             <label for="cpf">CPF</label>
+                                            <span class="text-danger" id="msg-cpf"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" id="dtNascimento"
-                                                name="dtNascimento" placeholder="Data de Nascimento">
+                                            <input type="date" class="form-control" id="dtNascimento" name="dtNascimento" placeholder="Data de Nascimento" required>
                                             <label for="dtNascimento">Data de Nascimento</label>
+                                            <span class="text-danger" id="msg-dtnascimento"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -104,37 +106,38 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="cnpj" placeholder="CNPJ">
+                                            <input type="text" class="form-control" id="cnpj" placeholder="CNPJ" required>
                                             <label for="cnpj">CNPJ</label>
+                                            <span class="text-danger" id="msg-cnpj"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="razaoSocial"
-                                                placeholder="Razão Social">
+                                            <input type="text" class="form-control text-uppercase" id="razaoSocial" placeholder="Razão Social" required>
                                             <label for="razaoSocial">Razão Social</label>
+                                            <span class="text-danger" id="msg-razao"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="nomeFantasia"
-                                        placeholder="Nome Fantasia">
+                                    <input type="text" class="form-control text-uppercase" id="nomeFantasia" placeholder="Nome Fantasia" required>
                                     <label for="nomeFantasia">Nome Fantasia</label>
+                                    <span class="text-danger" id="msg-fantasia"></span>
                                 </div>
-                                <span class="text-danger" id="msg-Pessoa"></span>
                             </div>
                             <div class="row"><!--cria as linhas-->
                                 <div class="col-md-3">
                                     <div class="form-floating mb-3">
-                                        <input type="tel" class="form-control" id="telefone" placeholder="Telefone"
-                                            alt="(99)99999-9999">
-                                        <label for="telefone">Telefone</label>
+                                        <input type="tel" class="form-control" id="telefone" placeholder="Telefone" required>
+                                        <label for="telefone">Celular</label>
+                                        <span class="text-danger" id="msg-telefone"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-9">
                                     <div class="form-floating mb-3">
-                                        <input type="email" class="form-control" id="email" placeholder="Email">
+                                        <input type="email" class="form-control text-lowercase" id="email" placeholder="Email" required>
                                         <label for="email">Email</label>
+                                        <span class="text-danger" id="msg-email"></span>
                                     </div>
                                 </div>
                             </div>
@@ -209,32 +212,3 @@
         </div>
     </div>
 </div>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const checkPf = document.getElementById("checkedPF");
-        const checkPj = document.getElementById("checkedPJ");
-        const camposPf = document.getElementById("camposPF");
-        const camposPj = document.getElementById("camposPJ");
-
-        checkPf.addEventListener("change", function () {
-            if (checkPf.checked) {
-                camposPf.style.display = "block";
-                camposPj.style.display = "none";
-                checkPj.checked = false;
-            } else {
-                camposPf.style.display = "none";
-            }
-        });
-        checkPj.addEventListener("change", function () {
-            if (checkPj.checked) {
-                camposPj.style.display = "block";
-                camposPf.style.display = "none";
-                checkPf.checked = false;
-            } else {
-                camposPj.style.display = "none";
-            }
-        });
-    });
-</script>

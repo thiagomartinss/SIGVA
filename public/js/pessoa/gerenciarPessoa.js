@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function(){
     let msgFantasia = document.querySelector("#msg-fantasia");
     let msgTelefone = document.querySelector("#msg-telefone");
     let msgEmail = document.querySelector("#msg-email");
+    let msgPessoa = document.querySelector("#msg-pessoa");
     const inputNome = document.querySelector("#nome");
     const inputCpf = document.querySelector("#cpf");
     const inputDtNascimento = document.querySelector("#dtNascimento");
@@ -22,6 +23,8 @@ document.addEventListener("DOMContentLoaded", function(){
     const camposPj = document.getElementById("camposPJ");
     const inputTelefone = document.querySelector("#telefone");
     const inputEmail = document.querySelector("#email");
+    //const checkCliente = document.querySelector("#checkCliente");
+    //const checkFornecedor = document.querySelector("#checkFornecedor");
 
     const btnCadastrar = document.querySelector("#btnCadastrar");
 
@@ -91,10 +94,8 @@ document.addEventListener("DOMContentLoaded", function(){
         if (value.length > 10) {
             value = value.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1) $2-$3");
         } else if (value.length > 5) {
-            // Formato Fixo: (11) 1234-5678 (enquanto digita)
             value = value.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1) $2-$3");
         } else if (value.length > 2) {
-            // Apenas DDD: (11) 12...
             value = value.replace(/^(\d\d)(\d{0,5})/, "($1) $2");
         }
         
@@ -118,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function(){
             camposPf.style.display = "block";
             camposPj.style.display = "none";
             checkPj.checked = false;
-
+            checkFornecedor.disabled = true
             limparValidacao();
 
             inputCnpj.value = "";
@@ -134,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function(){
             camposPj.style.display = "block";
             camposPf.style.display = "none";
             checkPf.checked = false; 
-
+            checkFornecedor.disabled = false;
             limparValidacao();
 
             inputNome.value = "";
@@ -146,8 +147,10 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     function cadastrar(){
+        let cadastroPessoa = [];
         if(validaTipoPessoaSelecionado()){
             if(checkPf.checked === true){
+                //checkFornecedor.disable = true;
                 let nome = inputNome.value.toUpperCase().trim();
                 let cpf = inputCpf.value;
                 let dataNasc = inputDtNascimento.value;
@@ -172,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 }
 
                 if(listaErrosPf.length == 0){
-                    console.log("Cadastro PF Válido!");
+                    cadastroPessoa.push(nome,cpf,dataNasc);
                 }
                 else{
                     if(listaErrosPf.includes("nomeVazio")){
@@ -225,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function(){
                     listaErrosPj.push("fantasiaIncompleta");
 
                 if(listaErrosPj.length == 0){
-                    console.log("Cadastro PJ Válido!");
+                    cadastroPessoa.push(cnpj,razao,fantasia);
                 } 
                 else {
                     if(listaErrosPj.includes("cnpjVazio")){
@@ -256,21 +259,61 @@ document.addEventListener("DOMContentLoaded", function(){
                     }
                 }
             }
+
+            let listaErros = [];
             let email = inputEmail.value.trim();
             let telefone = inputTelefone.value;
-            if (email !== "") {
-                if (!validarEmail(email)) {
-                    msgEmail.innerText = "E-mail inválido";
-                    inputEmail.style.borderColor = "red";
+
+            if(email.trim() == "")
+                listaErros.push("emailVazio");
+            else if (email != "" && !validarEmail(email))
+                listaErros.push("emailInválido");
+            
+            if(telefone.trim() == "")
+                listaErros.push("telefoneVazio");
+            else if (telefone != "" && !validarTelefone(telefone))
+                    listaErros.push("telefoInvalido");
+            
+            if(listaErros.length == 0 ){
+                cadastroPessoa.push(email,telefone);
+
+                fetch("/pessoa/cadastrar", {
+                method: 'POST',
+                body: JSON.stringify(cadastroPessoa),
+                headers: {
+                    "Content-Type": "application/json",
                 }
+                })
+                .then(r=> {
+                    return r.json();
+                })
+                .then(r => {
+                    if(r.ok) {
+                        window.location.href="/pessoa";
+                    } else {
+                        msgPessoa.innerHTML = r.msg;
+                    }
+                })
             }
-           
-            if (telefone !== "") {
-                if (!validarTelefone(telefone)) {
+            else{
+                if(listaErros.includes("emailVazio")){
+                    msgEmail.innerText = "Email obrigatório";
+                    inputEmail.style["border-color"] = "red";
+                }
+                if(listaErros.includes("emailInválido")){
+                    msgEmail.innerText = "Email inválido";
+                    inputEmail.style["border-color"] = "red";
+                }
+                if(listaErros.includes("telefoneVazio")){
+                    msgTelefone.innerText = "Celular obrigatório";
+                    inputTelefone.style["border-color"] = "red";
+                }
+                if(listaErros.includes("telefoInvalido")){
                     msgTelefone.innerText = "Telefone inválido";
-                    inputTelefone.style.borderColor = "red";
+                    inputTelefone.style["border-color"] = "red";
                 }
             }
+            console.log(cadastroPessoa);
         }
         
     }
@@ -329,7 +372,6 @@ document.addEventListener("DOMContentLoaded", function(){
     function validarDataNascimento(dtNascimento) {
         let dataNasc = new Date(dtNascimento + "T00:00:00");
         let dataAtual = new Date();
-        let msg = "";
 
         if (dataNasc > dataAtual)
             return "A data não pode ser futura";
@@ -404,6 +446,9 @@ document.addEventListener("DOMContentLoaded", function(){
         return regex.test(email);
     }
     function limparValidacao(){
+        checkPf.checked = false;
+        checkPj.checked = false;
+        checkFornecedor.disabled = false;
         lbPF.style.color = "";
         lbPJ.style.color = "";
         msgCheckPessoa.innerText = "";
@@ -414,6 +459,8 @@ document.addEventListener("DOMContentLoaded", function(){
         inputCnpj.style.borderColor = "#ced4da";
         inputRazao.style.borderColor = "#ced4da";
         inputFantasia.style.borderColor = "#ced4da";
+        inputEmail.style.borderColor = "#ced4da";
+        inputTelefone.style.borderColor = "#ced4da";
 
         msgNome.innerText = "";
         msgCpf.innerText = "";
@@ -421,6 +468,8 @@ document.addEventListener("DOMContentLoaded", function(){
         msgCnpj.innerText = "";
         msgRazao.innerText = "";
         msgFantasia.innerText = "";
+        msgEmail.innerText = "";
+        msgTelefone.innerText = "";
     }
     
 })

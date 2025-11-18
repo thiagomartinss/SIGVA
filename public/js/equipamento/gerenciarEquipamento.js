@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function(){
             if(listaErros.includes("marcaEquipamento"))
                 document.getElementById("marcaEquipamento").style["border-color"] = "red";
             
-            msgEquipamento.textContent = "c";
+            msgEquipamento.textContent = "Preencha os campos";
         }
     }
 

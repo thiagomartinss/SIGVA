@@ -1,8 +1,4 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-
-<link href="/css/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-
-
 <style>
     .btn-semear {
         background-color: #27812E;
@@ -20,16 +16,6 @@
         width: 250px !important;
     }
 </style>
-<!--carrinho-->
-<div class="d-flex justify-content-end">
-    <button class="btn btn-semear end m-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#carrinhoLaterl">
-        <i class="bi-cart-fill me-1"></i>
-        Carrinho
-        <span id="contadorCarrinho" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-    </button>
-</div>
-
-
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
@@ -55,7 +41,7 @@
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <div class="text-center">
                                 <button data-produto="<%= value.produtoId %>"
-                                    class="btn btn-semear mt-auto addCarrinho">
+                                    class="btn btn-semear mt-auto addCar">
                                     <i class="bi-cart-fill me-1"></i>
                                     Adicionar ao carrinho
                                 </button>
@@ -66,43 +52,6 @@
                 <% }) %>
         </div>
     </div>
-
+    
 </section>
-<div class="offcanvas offcanvas-end" tabindex="-1" id="carrinhoLaterl">
-    <div class="offcanvas-header align-items-start">
-        <h3 class="offcanvas-title mt-4">Meu Carrinho</h3>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
-    </div>
-
-    <div class="offcanvas-body">
-        <div id="listaCarrinho">
-            <p class="text-muted">Nenhum item no carrinho.</p>
-        </div>
-
-        <div class="mt-4">
-            <h5>Total: R$ <span id="totalCarrinho">0,00</span></h5>
-        </div>
-
-        <button class="btn btn-semear w-100 mt-3" id="btnFinalizarCompra">
-            Finalizar Compra
-        </button>
-    </div>
-</div>
-
-<script>
-    //pegar o codigo do fulvio aquiii
-    document.addEventListener("DOMContentLoaded", function () {
-
-        let carrinho = [];
-
-        function atualizarLista() {
-            const lista = document.getElementById("listaCarrinho");
-            const totalEl = document.getElementById("totalCarrinho");
-
-            if (carrinho.length === 0) {
-                lista.innerHTML = `<p class="text-muted">Nenhum item no carrinho.</p>`;
-            }
-    }
-    });
-
-</script>
+<script src="/js/ecommerce/ecommerce.js"></script>

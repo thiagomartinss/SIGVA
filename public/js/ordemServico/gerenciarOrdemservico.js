@@ -27,8 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const checkQuant = document.querySelectorAll('.equipamento-checkbox');//EQUIPAMENTOS
     function quantEquip(checkbox) {
         const id = checkbox.dataset.id;//pega o id do equipamentos selecionado
-        const wrapp = document.getElementById("quant-wrapp" + id);
-        const input = document.getElementById("quant_" + id);
+        const wrapp = document.getElementById("equip-wrapp" + id);
+        const input = document.getElementById("equip-quant" + id);
 
         if (checkbox.checked) {
             wrapp.style.display = "block";
@@ -46,10 +46,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     const checkQuantP = document.querySelectorAll('.produto-checkbox');///PRODUTOS
-    function quantEquip(checkbox) {
-        const id = checkbox.dataset.id;//pega o id do equipamentos selecionado
-        const wrapp = document.getElementById("quant-wrapp" + id);
-        const input = document.getElementById("quant_" + id);
+    function quantProd(checkbox) {
+        const id = checkbox.dataset.id;
+        const wrapp = document.getElementById("prod-wrapp" + id);
+        const input = document.getElementById("prod-quant" + id);
 
         if (checkbox.checked) {
             wrapp.style.display = "block";
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     checkQuantP.forEach(checkbox => {
         checkbox.addEventListener("change", function () {
-            quantEquip(checkbox);
+            quantProd(checkbox);
         });
     });
     //DROPDOW  pessoas: segundo fulvio

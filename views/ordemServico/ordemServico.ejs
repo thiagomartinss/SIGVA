@@ -87,12 +87,45 @@
                             </select>
                             <label for="Endereco">Endereço</label>
                         </div>
-                        <div class="form-floating mb-3">
-                            <select class="form-select" id="Servico">
-                                <option value="" selected disabled>Selecione o Serviço</option>
-                            </select>
-                            <label for="Servico">Serviço</label>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input border border-2 border-primary" type="checkbox"
+                                id="checkServico">
+                            <label class="form-check-label" for="checkServico">
+                                Selecione os serviços utilizados:
+                            </label>
                         </div>
+
+                        <div id="divServico" class="form-floating mb-3" style="display: none;">
+                            <label class="form-label mt-3">Serviços utilizados:</label> <br>
+
+                            <div class="container border rounded p-3">
+                                <div class="row">
+                                    <% listaServicos.map(function(servico) { %>
+                                        <div class="col-md-4">
+                                            <div class="d-flex align-items-center gap-2 mt-3">
+                                                <input
+                                                    class="form-check-input border border-2 border-primary servico-checkbox"
+                                                    type="checkbox" data-id="<%= servico.servicoId %>"
+                                                    value="<%= servico.servicoId %>">
+
+                                                <label class="form-check-label fw-bold mb-0">
+                                                    <%= servico.servicoDesc %>
+                                                </label>
+
+                                                <!-- <div id="serv-wrapp<%=// servico.servicoId %>" style="display: none;">
+                                                    <input type="number"
+                                                        class="form-control form-control-sm border border-2 border-secondary"
+                                                        id="serv-quant<%=// servico.servicoId %>" style="width: 60px;"
+                                                        min="1" value="1">
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="descricaoOS"
                                 placeholder="Descriçao da Ordem de serviço">

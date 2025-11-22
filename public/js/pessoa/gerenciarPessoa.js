@@ -1,8 +1,13 @@
 document.addEventListener("DOMContentLoaded", function(){
     let checkPj = document.querySelector("#checkedPJ");
     let checkPf = document.querySelector("#checkedPF");
+    let checkCliente = document.querySelector("#checkCliente");
+    let checkFornecedor = document.querySelector("#checkFornecedor");
+
     let lbPF = document.querySelector("#lb-checkedPF");
     let lbPJ = document.querySelector("#lb-checkedPJ");
+    let lbPerfil = document.querySelector("#lbPerfil");
+
     let msgCheckPessoa = document.querySelector("#msg-checkPessoa");
     let msgNome = document.querySelector("#msg-nome");
     let msgCpf = document.querySelector("#msg-cpf");
@@ -12,19 +17,33 @@ document.addEventListener("DOMContentLoaded", function(){
     let msgFantasia = document.querySelector("#msg-fantasia");
     let msgTelefone = document.querySelector("#msg-telefone");
     let msgEmail = document.querySelector("#msg-email");
+    let msgCep = document.querySelector("#msg-cep");
+    let msgLogradouro = document.querySelector("#msg-logradouro");
+    let msgNumero = document.querySelector("#msg-numero");
+    let msgBairro = document.querySelector("#msg-bairro");
+    let msgCidade = document.querySelector("#msg-cidade");
+    let msgUf = document.querySelector("#msg-uf");
+    let msgPerfil = document.querySelector("#msg-perfil");
     let msgPessoa = document.querySelector("#msg-pessoa");
+
     const inputNome = document.querySelector("#nome");
     const inputCpf = document.querySelector("#cpf");
     const inputDtNascimento = document.querySelector("#dtNascimento");
     const inputCnpj = document.querySelector("#cnpj");
     const inputRazao = document.querySelector("#razaoSocial");
     const inputFantasia = document.querySelector("#nomeFantasia");
-    const camposPf = document.getElementById("camposPF");
-    const camposPj = document.getElementById("camposPJ");
     const inputTelefone = document.querySelector("#telefone");
     const inputEmail = document.querySelector("#email");
-    //const checkCliente = document.querySelector("#checkCliente");
-    //const checkFornecedor = document.querySelector("#checkFornecedor");
+    const inputCep = document.querySelector("#cep");
+    const inputLogradouro = document.querySelector("#logradouro");
+    const inputNumero = document.querySelector("#numero");
+    const inputBairro = document.querySelector("#bairro");
+    
+    const camposPf = document.getElementById("camposPF");
+    const camposPj = document.getElementById("camposPJ");
+
+    const selectCidade = document.querySelector("#cidade");
+    const selectUf = document.querySelector("#uf");
 
     const btnCadastrar = document.querySelector("#btnCadastrar");
 
@@ -56,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     inputCnpj.addEventListener('input', function() {
-        inputCnpj.style.borderColor = "#ced4da";
+        inputCnpj.style["border-color"] = "#ced4da";
         msgCnpj.innerText = "";
         
         let value = inputCnpj.value;
@@ -107,9 +126,76 @@ document.addEventListener("DOMContentLoaded", function(){
         msgEmail.innerText = "";
     });
 
+    inputCep.addEventListener('input', function() {
+        inputCep.style.borderColor = "#ced4da"; 
+        let value = inputCep.value;
+
+        value = value.replace(/\D/g, ""); 
+        
+        if (value.length > 8) {
+            value = value.slice(0, 8);
+        }
+
+        value = value.replace(/^(\d{5})(\d)/, "$1-$2");
+
+        inputCep.value = value;
+    });
+
+    inputNumero.addEventListener('input', function(){
+        inputNumero.style["border-color"] = "#ced4da";
+        msgNumero.innerText = "";
+    });
+
+     // --- INTEGRAÇÃO VIA CEP ---
+    inputCep.addEventListener('blur', function() {
+        inputCep.style.borderColor = "#ced4da"; 
+        msgCep.innerText = "";
+
+        let cep = inputCep.value.replace(/\D/g, '');
+
+        if (cep.length !== 8) {
+            return; // CEP invalido ou incompleto
+        }
+
+        inputLogradouro.value = "Pesquisando...";
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.erro) {
+                    msgCep.innerText = "CEP não encontrado!";
+                    limparCamposEndereco();
+                    return;
+                }
+
+                inputLogradouro.value = data.logradouro;
+                inputBairro.value = data.bairro;
+
+                selecionarOpcaoPorTexto(selectUf, data.uf);
+                selecionarOpcaoPorTexto(selectCidade, data.localidade);
+
+                inputLogradouro.style.borderColor = "#ced4da";
+                msgLogradouro.innerText = "";
+
+                inputBairro.style.borderColor = "#ced4da";
+                msgBairro.innerText = "";
+
+                selectCidade.style.borderColor = "#ced4da";
+                msgCidade.innerText = "";
+
+                selectUf.style.borderColor = "#ced4da";
+                msgUf.innerText = "";
+
+                document.querySelector("#numero").focus();
+            })
+            .catch(error => {
+                msgCep.innerText = "Erro ao buscar CEP";
+                limparCamposEndereco();
+            });
+    });
+
     const modal = document.getElementById('modalPessoa')
         modal.addEventListener('show.bs.modal', event => {
-        limparValidacao();
+        limparFormulario();
     });
 
     btnCadastrar.addEventListener("click", cadastrar);
@@ -119,8 +205,9 @@ document.addEventListener("DOMContentLoaded", function(){
             camposPf.style.display = "block";
             camposPj.style.display = "none";
             checkPj.checked = false;
-            checkFornecedor.disabled = true
             limparValidacao();
+            checkFornecedor.disabled = true; 
+            checkFornecedor.checked = false;
 
             inputCnpj.value = "";
             inputRazao.value = "";
@@ -135,9 +222,8 @@ document.addEventListener("DOMContentLoaded", function(){
             camposPj.style.display = "block";
             camposPf.style.display = "none";
             checkPf.checked = false; 
-            checkFornecedor.disabled = false;
             limparValidacao();
-
+            checkFornecedor.disabled = false;
             inputNome.value = "";
             inputCpf.value = "";
             inputDtNascimento.value = "";
@@ -146,187 +232,270 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     });
 
+    checkCliente.addEventListener("change", function(){
+        if(checkCliente.checked){
+            msgPerfil.innerText = "";
+            lbPerfil.style.color = "";
+        }
+    });
+
+    checkFornecedor.addEventListener("change", function(){
+        if(checkFornecedor.checked){
+            msgPerfil.innerText = "";
+            lbPerfil.style.color = "";
+        }
+    })
+
     function cadastrar(){
-        let cadastroPessoa = [];
-        if(validaTipoPessoaSelecionado()){
-            if(checkPf.checked === true){
-                //checkFornecedor.disable = true;
-                let nome = inputNome.value.toUpperCase().trim();
-                let cpf = inputCpf.value;
-                let dataNasc = inputDtNascimento.value;
-                let erroData = validarDataNascimento(dataNasc);
-                let listaErrosPf = [];
-                
-                if(nome.trim() == "")
-                    listaErrosPf.push("nomeVazio");
-                else if (nome.trim().split(" ").filter(parte => parte !== "").length < 2) 
-                    listaErrosPf.push("nomeIncompleto");
-                
-                if(cpf.trim() == "")
-                    listaErrosPf.push("cpfVazio");
-                if(cpf.trim() != "" && !validarCPF(cpf))
-                    listaErrosPf.push("cpfInvalido");
-                
-                if(dataNasc == "")
-                    listaErrosPf.push("dataNascVazio");
-                if(dataNasc != "" && erroData != "") {
-                    listaErrosPf.push("dataInvalida");
-                    msgDtNascimento.dataset.erro = erroData; 
-                }
+        limparValidacao();
 
-                if(listaErrosPf.length == 0){
-                    cadastroPessoa.push(nome,cpf,dataNasc);
-                }
-                else{
-                    if(listaErrosPf.includes("nomeVazio")){
-                        msgNome.innerText = "Nome é obrigatório";
-                        inputNome.style["border-color"] = "red";
-                    }
-                    if(listaErrosPf.includes("nomeIncompleto")){
-                        msgNome.innerText = "Digite o nome completo";
-                        inputNome.style["border-color"] = "red";
-                    }
+        let dados = validaCampos();
 
-                    if(listaErrosPf.includes("cpfVazio")){
-                        msgCpf.innerText = "O campo CPF é obrigatório!";
-                        inputCpf.style["border-color"] = "red";
-                    }
-                    if(listaErrosPf.includes("cpfInvalido")){
-                        msgCpf.innerText = "Digite um CPF válido";
-                        inputCpf.style["border-color"] = "red";
-                    }
-                    
-                    if(listaErrosPf.includes("dataNascVazio")){
-                        msgDtNascimento.innerText = "A data de nascimento é obrigatória";
-                        inputDtNascimento.style["border-color"] = "red";
-                    }
-                    if(listaErrosPf.includes("dataInvalida")){
-                        msgDtNascimento.innerText = msgDtNascimento.dataset.erro; 
-                        inputDtNascimento.style["border-color"] = "red";
-                    }
-                }
-            }
-            if(checkPj.checked === true){
-                let cnpj = inputCnpj.value;
-                let razao = inputRazao.value.toUpperCase().trim();
-                let fantasia = inputFantasia.value.toUpperCase().trim();
-                let listaErrosPj = [];
-
-                if(cnpj.trim() == "") 
-                    listaErrosPj.push("cnpjVazio");
-                if(cnpj.trim() != "" && !validarCNPJ(cnpj)) 
-                    listaErrosPj.push("cnpjInvalido");
-
-                if(razao == "") 
-                    listaErrosPj.push("razaoVazio");
-                else if(razao.split(" ").filter(p => p !== "").length < 2) 
-                    listaErrosPj.push("razaoIncompleta");
-
-                if(fantasia == "") 
-                    listaErrosPj.push("fantasiaVazio");
-                else if(fantasia.split(" ").filter(p => p !== "").length < 2) 
-                    listaErrosPj.push("fantasiaIncompleta");
-
-                if(listaErrosPj.length == 0){
-                    cadastroPessoa.push(cnpj,razao,fantasia);
-                } 
-                else {
-                    if(listaErrosPj.includes("cnpjVazio")){
-                        msgCnpj.innerText = "O campo CNPJ é obrigatório!";
-                        inputCnpj.style["border-color"] = "red";
-                    }
-                    if(listaErrosPj.includes("cnpjInvalido")){
-                        msgCnpj.innerText = "CNPJ inválido!";
-                        inputCnpj.style["border-color"] = "red";
-                    }
-
-                    if(listaErrosPj.includes("razaoVazio")){
-                        msgRazao.innerText = "Razão Social obrigatória";
-                        inputRazao.style["border-color"] = "red";
-                    }
-                    if(listaErrosPj.includes("razaoIncompleta")){
-                        msgRazao.innerText = "Digite a Razão Social completa";
-                        inputRazao.style["border-color"] = "red";
-                    }
-
-                    if(listaErrosPj.includes("fantasiaVazio")){
-                        msgFantasia.innerText = "Nome Fantasia obrigatório";
-                        inputFantasia.style["border-color"] = "red";
-                    }
-                    if(listaErrosPj.includes("fantasiaIncompleta")){
-                        msgFantasia.innerText = "Digite o Nome Fantasia completo";
-                        inputFantasia.style["border-color"] = "red";
-                    }
-                }
-            }
-
-            let listaErros = [];
-            let email = inputEmail.value.trim();
-            let telefone = inputTelefone.value;
-
-            if(email.trim() == "")
-                listaErros.push("emailVazio");
-            else if (email != "" && !validarEmail(email))
-                listaErros.push("emailInválido");
-            
-            if(telefone.trim() == "")
-                listaErros.push("telefoneVazio");
-            else if (telefone != "" && !validarTelefone(telefone))
-                    listaErros.push("telefoInvalido");
-            
-            if(listaErros.length == 0 ){
-                cadastroPessoa.push(email,telefone);
-
-                fetch("/pessoa/cadastrar", {
+        if(dados){
+            console.log(dados);
+            fetch("/pessoa/cadastrar", {
                 method: 'POST',
-                body: JSON.stringify(cadastroPessoa),
+                body: JSON.stringify(dados),
                 headers: {
                     "Content-Type": "application/json",
                 }
-                })
-                .then(r=> {
-                    return r.json();
-                })
-                .then(r => {
-                    if(r.ok) {
-                        window.location.href="/pessoa";
-                    } else {
-                        msgPessoa.innerHTML = r.msg;
-                    }
-                })
-            }
-            else{
-                if(listaErros.includes("emailVazio")){
-                    msgEmail.innerText = "Email obrigatório";
-                    inputEmail.style["border-color"] = "red";
+            })
+            .then(r => r.json())
+            .then(r => {
+                if(r.ok) {
+                    console.log("Cadastrado com sucesso!");
+                    window.location.href="/pessoa";
+                } else {
+                    msgPessoa.innerHTML = r.msg;
                 }
-                if(listaErros.includes("emailInválido")){
-                    msgEmail.innerText = "Email inválido";
-                    inputEmail.style["border-color"] = "red";
-                }
-                if(listaErros.includes("telefoneVazio")){
-                    msgTelefone.innerText = "Celular obrigatório";
-                    inputTelefone.style["border-color"] = "red";
-                }
-                if(listaErros.includes("telefoInvalido")){
-                    msgTelefone.innerText = "Telefone inválido";
-                    inputTelefone.style["border-color"] = "red";
-                }
-            }
-            console.log(cadastroPessoa);
+            });
         }
-        
     }
 
-    function validaTipoPessoaSelecionado() {
-        if (!checkPf.checked && !checkPj.checked) {
-            msgCheckPessoa.innerText = "Selecione Pessoa Física ou Jurídica";
-            msgCheckPessoa.className = "text-danger";
-            lbPF.style.color = 'red';
-            lbPJ.style.color = 'red';
-            return false;
+    function validaCampos(){
+        let nome = inputNome.value.toUpperCase().trim();
+        let cpf = inputCpf.value;
+        let dataNasc = inputDtNascimento.value;
+        let erroData = validarDataNascimento(dataNasc);
+
+        let cnpj = inputCnpj.value;
+        let razao = inputRazao.value.toUpperCase().trim();
+        let fantasia = inputFantasia.value.toUpperCase().trim();
+
+        let telefone = inputTelefone.value;
+        let email = inputEmail.value.trim();
+        let cep = inputCep.value;
+        let logradouro = inputLogradouro.value;
+        let numero = inputNumero.value;
+        let bairro = inputBairro.value;
+        let cidade = selectCidade.value;
+        let uf = selectUf.value;
+        let listaErros = [];
+
+        if (!checkPf.checked && !checkPj.checked)
+            listaErros.push("tipoPessoa");
+
+        if(checkPf.checked){
+             if(nome.trim() == "")
+                listaErros.push("nomeVazio");
+            else if (nome.trim().split(" ").filter(parte => parte !== "").length < 2) 
+                listaErros.push("nomeIncompleto");
+            
+            if(cpf.trim() == "")
+                listaErros.push("cpfVazio");
+            if(cpf.trim() != "" && !validarCPF(cpf))
+                listaErros.push("cpfInvalido");
+            
+            if(dataNasc == "")
+                listaErros.push("dataNascVazio");
+            if(dataNasc != "" && erroData != "") {
+                listaErros.push("dataInvalida");
+                msgDtNascimento.dataset.erro = erroData; 
+            }
         }
-        return true;
+        if(checkPj.checked){
+            if(cnpj.trim() == "") 
+                listaErros.push("cnpjVazio");
+            if(cnpj.trim() != "" && !validarCNPJ(cnpj)) 
+                listaErros.push("cnpjInvalido");
+
+            if(razao == "") 
+                listaErros.push("razaoVazio");
+            else if(razao.split(" ").filter(p => p !== "").length < 2) 
+                listaErros.push("razaoIncompleta");
+
+            if(fantasia == "") 
+                listaErros.push("fantasiaVazio");
+            else if(fantasia.split(" ").filter(p => p !== "").length < 2) 
+                listaErros.push("fantasiaIncompleta");
+        }
+        if(email.trim() == "")
+            listaErros.push("emailVazio");
+        else if (email != "" && !validarEmail(email))
+            listaErros.push("emailInválido");
+        
+        if(telefone.trim() == "")
+            listaErros.push("telefoneVazio");
+        else if (telefone != "" && !validarTelefone(telefone))
+                listaErros.push("telefoInvalido");
+        
+        if(cep.trim() == "")
+            listaErros.push("cepVazio");
+        
+        if(logradouro.trim() == "")
+            listaErros.push("logradouroVazio");
+
+        if(numero.trim() == "")
+            listaErros.push("numeroVazio");
+
+        if(bairro.trim() == "")
+            listaErros.push("bairroVazio");
+
+        if(cidade == "" || cidade == null)
+            listaErros.push("cidadeVazio");
+
+        if(uf == "" || uf == null)
+            listaErros.push("ufVazio");
+
+        if(!checkCliente.checked && !checkFornecedor.checked)
+            listaErros.push("perfilVazio");
+
+        if(listaErros.length == 0){
+            console.log("tudo ok");
+            let dadosPessoa = {
+                tipoPessoa: checkPf.checked ? 'PF' : 'PJ',
+                email: email,
+                telefone: telefone.replace(/\D/g, ""), 
+                cep: cep.replace(/\D/g, ""),
+                logradouro: logradouro,
+                numero: numero,
+                bairro: bairro,
+                cidadeId: cidade,
+                ufId: uf,
+                ehCliente: checkCliente.checked,
+                ehFornecedor: checkFornecedor.checked
+            };
+            if(checkPf.checked){
+                dadosPessoa.nome = nome; 
+                dadosPessoa.cpf = cpf.replace(/\D/g, ""); 
+                dadosPessoa.dataNascimento = dataNasc;
+            }else {
+                dadosPessoa.cnpj = cnpj.replace(/\D/g, "");
+                dadosPessoa.razaoSocial = razao;
+                dadosPessoa.nomeFantasia = fantasia;
+            }
+            return dadosPessoa;
+        }
+        else{
+            if(listaErros.includes("tipoPessoa")){
+                msgCheckPessoa.innerText = "Selecione Pessoa Física ou Jurídica";
+                msgCheckPessoa.className = "text-danger";
+                lbPF.style.color = 'red';
+                lbPJ.style.color = 'red';
+            }
+            if(listaErros.includes("nomeVazio")){
+                msgNome.innerText = "Nome é obrigatório";
+                inputNome.style["border-color"] = "red";
+            }
+            if(listaErros.includes("nomeIncompleto")){
+                msgNome.innerText = "Digite o nome completo";
+                inputNome.style["border-color"] = "red";
+            }
+
+            if(listaErros.includes("cpfVazio")){
+                msgCpf.innerText = "O campo CPF é obrigatório!";
+                inputCpf.style["border-color"] = "red";
+            }
+            if(listaErros.includes("cpfInvalido")){
+                msgCpf.innerText = "Digite um CPF válido";
+                inputCpf.style["border-color"] = "red";
+            }
+            if(listaErros.includes("dataNascVazio")){
+                msgDtNascimento.innerText = "A data de nascimento é obrigatória";
+                inputDtNascimento.style["border-color"] = "red";
+            }
+            if(listaErros.includes("dataInvalida")){
+                msgDtNascimento.innerText = msgDtNascimento.dataset.erro; 
+                inputDtNascimento.style["border-color"] = "red";
+            }
+             if(listaErros.includes("cnpjVazio")){
+                msgCnpj.innerText = "O campo CNPJ é obrigatório!";
+                inputCnpj.style["border-color"] = "red";
+            }
+            if(listaErros.includes("cnpjInvalido")){
+                msgCnpj.innerText = "CNPJ inválido!";
+                inputCnpj.style["border-color"] = "red";
+            }
+
+            if(listaErros.includes("razaoVazio")){
+                msgRazao.innerText = "Razão Social obrigatória";
+                inputRazao.style["border-color"] = "red";
+            }
+            if(listaErros.includes("razaoIncompleta")){
+                msgRazao.innerText = "Digite a Razão Social completa";
+                inputRazao.style["border-color"] = "red";
+            }
+
+            if(listaErros.includes("fantasiaVazio")){
+                msgFantasia.innerText = "Nome Fantasia obrigatório";
+                inputFantasia.style["border-color"] = "red";
+            }
+            if(listaErros.includes("fantasiaIncompleta")){
+                msgFantasia.innerText = "Digite o Nome Fantasia completo";
+                inputFantasia.style["border-color"] = "red";
+            }
+            if(listaErros.includes("emailVazio")){
+                msgEmail.innerText = "Email obrigatório";
+                inputEmail.style["border-color"] = "red";
+            }
+            if(listaErros.includes("emailInválido")){
+                msgEmail.innerText = "Email inválido";
+                inputEmail.style["border-color"] = "red";
+            }
+            if(listaErros.includes("telefoneVazio")){
+                msgTelefone.innerText = "Celular obrigatório";
+                inputTelefone.style["border-color"] = "red";
+            }
+            if(listaErros.includes("telefoInvalido")){
+                msgTelefone.innerText = "Telefone inválido";
+                inputTelefone.style["border-color"] = "red";
+            }
+            if(listaErros.includes("cepVazio")){
+                msgCep.innerText = "CEP obrigatório";
+                inputCep.style["border-color"] = "red";
+            }
+
+            if(listaErros.includes("logradouroVazio")){
+                msgLogradouro.innerText = "Logradouro obrigatório";
+                inputLogradouro.style["border-color"] = "red";
+            }
+
+            if(listaErros.includes("numeroVazio")){
+                msgNumero.innerText = "Número obrigatório";
+                inputNumero.style["border-color"] = "red";
+            }
+
+            if(listaErros.includes("bairroVazio")){
+                msgBairro.innerText = "Bairro obrigatório";
+                inputBairro.style["border-color"] = "red";
+            }
+
+            if(listaErros.includes("cidadeVazio")){
+                msgCidade.innerText = "Selecione uma cidade";
+                selectCidade.style["border-color"] = "red";
+            }
+
+            if(listaErros.includes("ufVazio")){
+                msgUf.innerText = "Selecione um estado";
+                selectUf.style["border-color"] = "red"; 
+            }
+
+            if(listaErros.includes("perfilVazio")){
+                msgPerfil.innerText = "Selecione o perfil";
+                lbPerfil.style.color = 'red';
+            }
+            return null;
+        }
     }
 
     function validarCPF(cpf) {
@@ -445,14 +614,29 @@ document.addEventListener("DOMContentLoaded", function(){
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
     }
+
+    function selecionarOpcaoPorTexto(selectElement, textoParaAchar) {
+        for (let i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].text.toUpperCase() === textoParaAchar.toUpperCase()) {
+                selectElement.selectedIndex = i; 
+                return; 
+            }
+        }
+        selectElement.value = ""; 
+    }
+
+     function limparCamposEndereco() {
+        inputLogradouro.value = "";
+        inputBairro.value = "";
+        selectCidade.value = "";
+        selectUf.value = "";
+    }
+
     function limparValidacao(){
-        checkPf.checked = false;
-        checkPj.checked = false;
-        checkFornecedor.disabled = false;
         lbPF.style.color = "";
         lbPJ.style.color = "";
-        msgCheckPessoa.innerText = "";
-
+        lbPerfil.style.color = "";
+        
         inputNome.style.borderColor = "#ced4da";
         inputCpf.style.borderColor = "#ced4da";
         inputDtNascimento.style.borderColor = "#ced4da";
@@ -461,7 +645,14 @@ document.addEventListener("DOMContentLoaded", function(){
         inputFantasia.style.borderColor = "#ced4da";
         inputEmail.style.borderColor = "#ced4da";
         inputTelefone.style.borderColor = "#ced4da";
+        inputCep.style.borderColor = "#ced4da";
+        inputLogradouro.style.borderColor = "#ced4da";
+        inputBairro.style.borderColor = "#ced4da";
+        inputNumero.style.borderColor = "#ced4da";
+        selectCidade.style.borderColor = "#ced4da";
+        selectUf.style.borderColor = "#ced4da";
 
+        msgCheckPessoa.innerText = "";
         msgNome.innerText = "";
         msgCpf.innerText = "";
         msgDtNascimento.innerText = "";
@@ -470,6 +661,39 @@ document.addEventListener("DOMContentLoaded", function(){
         msgFantasia.innerText = "";
         msgEmail.innerText = "";
         msgTelefone.innerText = "";
+        msgCep.innerText = "";
+        msgLogradouro.innerText = "";
+        msgBairro.innerText = "";
+        msgNumero.innerText = "";
+        msgCidade.innerText = "";
+        msgUf.innerText = "";
+        msgPerfil.innerText = "";
+    }
+
+    function limparFormulario(){
+        limparValidacao();
+
+        inputNome.value = "";
+        inputCpf.value = "";
+        inputDtNascimento.value = "";
+        inputCnpj.value = "";
+        inputRazao.value = "";
+        inputFantasia.value = "";
+        inputEmail.value = "";
+        inputTelefone.value = ""
+        inputCep.value = "";
+        inputLogradouro.value = "";
+        inputNumero.value = "";
+        inputBairro.value = "";
+        selectCidade.value = "";
+        selectUf.value = "";
+        checkPf.checked = true;          
+        checkPj.checked = false;         
+        checkCliente.checked = false;     
+        checkFornecedor.checked = false; 
+        checkFornecedor.disabled = true; 
+        camposPf.style.display = "block"; 
+        camposPj.style.display = "none";
     }
     
 })

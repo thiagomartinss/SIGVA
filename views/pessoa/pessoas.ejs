@@ -67,7 +67,7 @@
                             <span class="text-danger" id="msg-checkPessoa"></span>
                             <div class="form-check mb-3">
                                 <input class="form-check-input border border-2 border-primary" type="checkbox"
-                                    id="checkedPF">
+                                    id="checkedPF" checked>
                                 <label class="form-check-label" for="checkedPF" id="lb-checkedPF">Pessoa Física</label>
                             </div>
                             <div class="form-check mb-3">
@@ -75,7 +75,7 @@
                                     id="checkedPJ">
                                 <label class="form-check-label" for="checkedPJ" id="lb-checkedPJ" >Pessoa Jurídica</label>
                             </div>
-                            <div id="camposPF" style="display:none;">
+                            <div id="camposPF" >
                                 <h5 class="mt-3">Dados Pessoa Física</h5>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -146,59 +146,72 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="cep" placeholder="CEP">
+                                        <input type="text" class="form-control" id="cep" placeholder="CEP" maxlength="9" required>
                                         <label for="cep">CEP</label>
+                                        <span class="text-danger" id="msg-cep"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="logradouro"
-                                            placeholder="Logradouro / Rua">
+                                        <input type="text" class="form-control" id="logradouro" placeholder="Logradouro / Rua" required>
                                         <label for="logradouro">Logradouro / Rua</label>
+                                        <span class="text-danger" id="msg-logradouro"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="numero" placeholder="Número">
+                                        <input type="text" class="form-control" id="numero" placeholder="Número" required>
                                         <label for="numero">Número</label>
+                                        <span class="text-danger" id="msg-numero"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="bairro" placeholder="Bairro">
+                                        <input type="text" class="form-control" id="bairro" placeholder="Bairro" required>
                                         <label for="bairro">Bairro</label>
+                                        <span class="text-danger" id="msg-bairro"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-10">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="cidade" placeholder="Cidade">
-                                        <label for="cidade">Cidade</label>
+                                        <select class="form-select" id="cidade">
+                                            <option value="" selected disabled> Cidade</option>
+                                            <% listaCidade.map(function(cidade){ %>
+                                                <option value=" <%= cidade.cidadeId %>"><%= cidade.cidade%></option>
+                                            <%}) %>
+                                        </select>
+                                        <span class="text-danger" id="msg-cidade"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control text-uppercase" id="uf" placeholder="UF"
-                                            maxlength="2">
-                                        <label for="uf">UF</label>
+                                        <select class="form-select" id="uf">
+                                            <option value="" selected disabled> UF</option>
+                                            <% listaUf.map(function(uf){ %>
+                                                <option value=" <%= uf.ufId %>"><%= uf.uf%></option>
+                                            <%}) %>
+                                        </select>
+                                        <span class="text-danger" id="msg-uf"></span>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3 mt-3">
-                                <label class="form-label fw-bold">Tipo da Pessoa</label>
+                                <label class="form-label fw-bold" id="lbPerfil">Tipo de Perfil</label>
                                 <div class="col-md-12 d-flex gap-4"> 
                                     <div class="form-check">
                                         <input class="form-check-input border border-2 border-primary" type="checkbox" id="checkCliente">
                                         <label class="form-check-label" for="checkCliente">Cliente</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input border border-2 border-primary" type="checkbox" id="checkFornecedor">
+                                        <input class="form-check-input border border-2 border-primary" type="checkbox" id="checkFornecedor" disabled>
                                         <label class="form-check-label" for="checkFornecedor">Fornecedor</label>
                                     </div>
                                 </div>
+                                <span class="text-danger" id="msg-perfil"></span>
                             </div>
                             <span class="text-danger" id="msg-pessoa"></span>
                             <div class="modal-footer">

@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
 class Database {
 
@@ -19,45 +19,54 @@ class Database {
             connectionLimit: 100, 
             queueLimit: 0 
         });
-        
     }
 
-    ExecutaComando(sql, valores) {
-        var cnn = this.#conexao;
-        return new Promise(function(res, rej) {
-            cnn.query(sql, valores, function (error, results, fields) {
-                if (error) 
-                    rej(error);
-                else 
-                    res(results);
-            });
-        })
+    async beginTransaction() {
+        const connection = await this.#conexao.getConnection(); 
+        await connection.beginTransaction();
+        return connection;
+    }
+
+    async commit(connection) {
+        await connection.commit();
+        connection.release();
+    }
+
+    async rollback(connection) {
+        await connection.rollback();
+        connection.release();
+    }
+
+
+    async ExecutaComando(sql, valores = [], connection = null) {
+        if (connection) {
+            const [rows] = await connection.query(sql, valores);
+            return rows;
+        } else {
+            const [rows] = await this.#conexao.query(sql, valores);
+            return rows;
+        }
     }
     
-    ExecutaComandoNonQuery(sql, valores) {
-        var cnn = this.#conexao;
-        return new Promise(function(res, rej) {
-            cnn.query(sql, valores, function (error, results, fields) {
-                if (error) 
-                    rej(error);
-                else 
-                    res(results.affectedRows > 0);
-            });
-        })
+    async ExecutaComandoNonQuery(sql, valores = [], connection = null) {
+        if (connection) {
+            const [result] = await connection.query(sql, valores);
+            return result;
+        } else {
+            const [result] = await this.#conexao.query(sql, valores);
+            return result; 
+        }
     }
 
-    ExecutaComandoLastInserted(sql, valores) {
-        var cnn = this.#conexao;
-        return new Promise(function(res, rej) {
-            cnn.query(sql, valores, function (error, results, fields) {
-                if (error) 
-                    rej(error);
-                else 
-                    res(results.insertId);
-            });
-        })
+    async ExecutaComandoLastInserted(sql, valores = [], connection = null) {
+        if (connection) {
+            const [result] = await connection.query(sql, valores);
+            return result.insertId;
+        } else {
+            const [result] = await this.#conexao.query(sql, valores);
+            return result.insertId;
+        }
     }
-
 }
 
 module.exports = Database;

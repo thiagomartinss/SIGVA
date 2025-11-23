@@ -14,9 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
         btns[i].addEventListener("click", adicionarAoCarrinho);
     }
     document.addEventListener("show.bs.modal", renderCarrinho);
-
     //document.getElementById("btnConfirmar").addEventListener("click", gravar);
-
     function calcularValorCarrinho() {
         let soma = 0;
         for (let item of carrinho) {
@@ -25,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById("valorTotal").innerHTML = `<h3>Valor total: R$ ${soma}</h3`;
     }
-
     function renderCarrinho() {
         let html = "";
 
@@ -71,8 +68,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         else {
             html = "Carrinho vazio!";
+            document.querySelector("#modalRender").innerHTML = html;
+            contador.innerText = 0;
+            calcularValorCarrinho();
         }
-
     }
     function adicionarAoCarrinho() {
         let produtoId = this.dataset.produto;
@@ -91,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 else {
                     produtoCarrinho[0].quantidade += 1;
                 }
-
                 localStorage.setItem("carrinho", JSON.stringify(carrinho));
                 contador.innerText = carrinho.length;
                 that.innerHTML = "<i class='fas fa-check'></i> Produto Adicionado ao Carinho!";
@@ -100,13 +98,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 }, 3000)
             })
     }
-
     function atualizaCarrinho() {
         localStorage.setItem("carrinho", JSON.stringify(carrinho));
 
+        contador.innerText = carrinho.length;
+
         renderCarrinho();
     }
-
     function ativaBotoesCarrinho() {
         const BtnMais = document.querySelectorAll(".btnMais");
         for (let i = 0; i < BtnMais.length; i++) {
@@ -123,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 atualizaCarrinho();
             })
         }
-
         const BtnMenos = document.querySelectorAll(".btnMenos");
         for (let i = 0; i < BtnMenos.length; i++) {
             BtnMenos[i].addEventListener("click", function () {
@@ -139,7 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 atualizaCarrinho();
             })
         }
-
         const inputs = document.querySelectorAll(".inputQtd");
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].addEventListener("change", function () {
@@ -167,11 +163,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 //remove somente aquele item q for clicado com o filtro
                 atualizaCarrinho();
             })
-            
         }
-
-
     }
-
-
 })

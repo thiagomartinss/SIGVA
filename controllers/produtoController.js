@@ -93,6 +93,14 @@ class ProdutoController{
             });
         }
     }
+        async obterProduto(req, res) {
+        let produtoId = req.params.id;
+
+        let produtoModel = new ProdutoModel();
+        let produto = await produtoModel.buscarProduto(produtoId);
+
+        res.send({produto: produto})
+    }
 
 }
 

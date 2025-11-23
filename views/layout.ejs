@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <title>Semear</title>
 </head>
-
 <body class="body">
     <header>
         <nav class="navbar navbar-expand-lg  p-3 bg-green100">
@@ -33,7 +31,7 @@
                         </li>
                     </ul>
                     <div class="me-3">
-                        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#carrinhoLaterl"><i
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalCarrinho"><i
                                 class="fa-solid fa-cart-shopping fa-xl fa-beat" style="color: #FFF9F9"></i><span
                                 id="contadorCarrinho"
                                 class="badge bg-dark text-white ms-1 rounded-pill">0</span></a><!--carrinho-->
@@ -128,27 +126,26 @@
             </ul>
         </div>
     </footer>
-
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="carrinhoLaterl" style="--bs-offcanvas-width: 600px;">
-        <div class="offcanvas-header align-items-start">
-            <h3 class="offcanvas-title mt-4">Meu Carrinho</h3>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
-        </div>
-
-        <div class="offcanvas-body">
-
-        </div>
-        <div id="valorTotal">
-            <h4 class="m-0">Valor total: R$ 0,00</h4>
-            <br>
-        </div>
-        <div class="offcanvas-footer d-flex justify-content-between align-items-center mt-3 p-2 border-top">
-
-
-            <div class="d-flex gap-2">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Fechar</button>
-                <button type="button" id="btnConfirmar" class="btn btn-primary">Confirmar</button>
+    <div class="modal fade modal-lg" id="modalCarrinho" tabindex="-1" aria-labelledby="modalCarrinhoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCarrinhoLabel">Carrinho de compras</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="modalRender" class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer" style="display:flex;justify-content: space-between;">
+                    <div id="valorTotal">
+                        <h3>Valor total: R$ 0,00</h3>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" id="btnConfirmar" class="btn btn-success bg-green200">Confirmar</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

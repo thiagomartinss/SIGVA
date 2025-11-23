@@ -1,6 +1,7 @@
 const ProdutoModel = require("../models/produtoModel");
 const MarcaModel = require("../models/marcaModel");
 const TipoProdutoModel = require("../models/tipoProdutoModel");
+const fs=require("fs");
 
 class ProdutoController{
 
@@ -59,6 +60,13 @@ class ProdutoController{
             });
             return;
         }
+        if(!req.file || !req.file.filename){
+            res.send({
+                ok:false,
+                msg:"É obrigatorio enviar uma Imagem"
+            });
+            return;
+        }
         try{
             let produto = new ProdutoModel();
             const produtoExistente = await produto.buscarExistnte(nome.trim(), marcaId.trim(), tipoId.trim());
@@ -71,7 +79,7 @@ class ProdutoController{
                 return;
             }
 
-            produto = new ProdutoModel(0,nome.trim(), vlVenda.trim(),vlCompra.trim(), qtdEstoque.trim(), marcaId.trim(), tipoId.trim());
+            produto = new ProdutoModel(0,nome.trim(), vlVenda.trim(),vlCompra.trim(), qtdEstoque.trim(), marcaId.trim(), tipoId.trim(),"","", req.file.filename);
             let result = await produto.cadastrarProduto();
 
             if(result){
@@ -101,7 +109,6 @@ class ProdutoController{
 
         res.send({produto: produto})
     }
-
 }
 
 module.exports = ProdutoController;

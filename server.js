@@ -49,6 +49,9 @@ server.use("/ordemServico", routeOrdemServico);
 server.use("/pessoa", routerPessoa);
 server.use("/ecommerce", routerEcommerce);
 
+global.CAMINHO_IMG = "/img/produtos/";
+global.CAMINHO_IMG_ABS = __dirname + "/public/img/produtos/";
+
 server.listen(5000, function () {
     console.log("Aplicação iniciada!");
 })

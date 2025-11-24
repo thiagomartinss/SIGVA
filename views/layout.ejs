@@ -1,121 +1,157 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="/img/semear-favicon.png" type="image/x-icon">
-        <link rel="stylesheet" href="/css/bootstrap5.3.8/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/colors.css">
-        <link rel="stylesheet" href="/css/style.css">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-        <title>Semear</title>
-    </head>
-    <body class="body">
-        <header>
-            <nav class="navbar navbar-expand-lg  p-3 bg-green100">
-                <div class="container-fluid">
-                    <a class="navbar-brand ms-5" href="/"><img src="/img/semear-logo.png" alt="Logo semear" style="width: auto; height: 50px;"></a>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-uppercase">
-                            <li class="nav-item"><a class="nav-link btn btn-outline-light  text-yellow100" aria-current="page" href="/">Home</a></li>
-                            <li class="nav-item"><a class="nav-link btn btn-success text-light" href="#">Produtos</a></li>
-                            <li class="nav-item"><a class="nav-link btn btn-success text-light" href="#">Serviços</a></li>
-                            <li class="nav-item"><a class="nav-link btn btn-success text-light" href="/about">Sobre nós</a></li>
-                            <li class="nav-item"><a class="nav-link btn btn-success text-light" href="/contact">Contato</a></li>
-                        </ul>
-                        <div class="me-3">
-                            <a href="#"><i class="fa-solid fa-cart-shopping fa-xl fa-beat" style="color: #FFF9F9"></i></a>
-                            <a href="/login" class="btn btn-outline-light text-uppercase ms-3" type="submit">Entrar</a>
-                            <a href="/register" class="btn btn-success text-light text-uppercase ms-3 bg-green200" type="submit">Cadastrar</a>
-                        </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/img/semear-favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/bootstrap5.3.8/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/colors.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <title>Semear</title>
+</head>
+<body class="body">
+    <header>
+        <nav class="navbar navbar-expand-lg  p-3 bg-green100">
+            <div class="container-fluid">
+                <a class="navbar-brand ms-5" href="/"><img src="/img/semear-logo.png" alt="Logo semear"
+                        style="width: auto; height: 50px;"></a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-uppercase">
+                        <li class="nav-item"><a class="nav-link btn btn-outline-light  text-yellow100"
+                                aria-current="page" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link btn btn-success text-light"
+                                href="/ecommerce">Produtos</a></li>
+                        <li class="nav-item"><a class="nav-link btn btn-success text-light" href="#">Serviços</a></li>
+                        <li class="nav-item"><a class="nav-link btn btn-success text-light" href="/about">Sobre nós</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link btn btn-success text-light" href="/contact">Contato</a>
+                        </li>
+                    </ul>
+                    <div class="me-3">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalCarrinho"><i
+                                class="fa-solid fa-cart-shopping fa-xl fa-beat" style="color: #FFF9F9"></i><span
+                                id="contadorCarrinho"
+                                class="badge bg-dark text-white ms-1 rounded-pill">0</span></a><!--carrinho-->
+                        <a href="/login" class="btn btn-outline-light text-uppercase ms-3" type="submit">Entrar</a>
+                        <a href="/register" class="btn btn-success text-light text-uppercase ms-3 bg-green200"
+                            type="submit">Cadastrar</a>
                     </div>
                 </div>
-            </nav>
-        </header>
-        <main>
-             <%- body %>
-        </main>
-        <footer class="container-fluid p-3 bg-green100 text-light">
-            <div class="row p-3">
-                <div class="col-6 col-md-2 mb-3 mt-5">
-                    <a href="#"><img src="/img/semear-logo.png" alt="Logo semear" style="width: auto; height: 90px;"></a>
-                </div>
-                <div class="col-6 col-md-2 mb-3">
-                    <h5>Institucional</h5>
-                    <ul class="nav flex-column">
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Missão</a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Visão</a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Valores</a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Cartilha de ética</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md-2 mb-3">
-                    <h5>Produtos e Serviços</h5>
-                    <ul class="nav flex-column">
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Sementes</a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Defensivos agrícolas</a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Mapeamento com drone</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-6 col-md-2 mb-3">
-                    <h5>Contato</h5>
-                    <ul class="nav flex-column">
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Rua: Dos Anjos, 2000 - Vila Industrial</a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">CEP: 19000-010</a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Presidente Prudente - SP</a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Telefone: (18)3222-0101</a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link p-0 text-light">Whatsapp: (18)99981-1001</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <form>
-                        <h5>Inscreva-se em nossa newsletter</h5>
-                        <p>Receba notícias e promoções.</p>
-                        <div class="input-group rounded">
-                            <label for="newsletter1" class="visually-hidden">Email</label>
-                            <input id="newsletter1" type="email" class="form-control rounded" placeholder="Email"/>
-                            <button class="btn btn-success text-uppercase bg-green200" type="button">Inscreva-se</button>
-                        </div>
-                    </form>
-                </div>
             </div>
-            <div class="d-flex flex-column flex-sm-row justify-content-center py-4 my-4 border-top">
-                <p>&copy; 2025 Vision IT. Todos os direitos reservados.</p>
-                <ul class="list-unstyled d-flex">
-                    <li class="ms-3">
-                        <a href="#"><i class="fa-brands fa-instagram fa-2xl" style="color: #FFF9F9"></i></a>
+        </nav>
+    </header>
+    <main>
+        <%- body %>
+    </main>
+    <footer class="container-fluid p-3 bg-green100 text-light">
+        <div class="row p-3">
+            <div class="col-6 col-md-2 mb-3 mt-5">
+                <a href="#"><img src="/img/semear-logo.png" alt="Logo semear" style="width: auto; height: 90px;"></a>
+            </div>
+            <div class="col-6 col-md-2 mb-3">
+                <h5>Institucional</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Missão</a>
                     </li>
-                    <li class="ms-3">
-                        <a href="#"><i class="fa-brands fa-facebook fa-2xl" style="color: #FFF9F9"></i></a>
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Visão</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Valores</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Cartilha de ética</a>
                     </li>
                 </ul>
             </div>
-        </footer>
-        <script src="/js/bootstrap5.3.8/bootstrap.bundle.min.js"></script>
-    </body>
+            <div class="col-6 col-md-2 mb-3">
+                <h5>Produtos e Serviços</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Sementes</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Defensivos agrícolas</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Mapeamento com drone</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-6 col-md-2 mb-3">
+                <h5>Contato</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Rua: Dos Anjos, 2000 - Vila Industrial</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">CEP: 19000-010</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Presidente Prudente - SP</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Telefone: (18)3222-0101</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link p-0 text-light">Whatsapp: (18)99981-1001</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-3">
+                <form>
+                    <h5>Inscreva-se em nossa newsletter</h5>
+                    <p>Receba notícias e promoções.</p>
+                    <div class="input-group rounded">
+                        <label for="newsletter1" class="visually-hidden">Email</label>
+                        <input id="newsletter1" type="email" class="form-control rounded" placeholder="Email" />
+                        <button class="btn btn-success text-uppercase bg-green200" type="button">Inscreva-se</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="d-flex flex-column flex-sm-row justify-content-center py-4 my-4 border-top">
+            <p>&copy; 2025 Vision IT. Todos os direitos reservados.</p>
+            <ul class="list-unstyled d-flex">
+                <li class="ms-3">
+                    <a href="#"><i class="fa-brands fa-instagram fa-2xl" style="color: #FFF9F9"></i></a>
+                </li>
+                <li class="ms-3">
+                    <a href="#"><i class="fa-brands fa-facebook fa-2xl" style="color: #FFF9F9"></i></a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+    <div class="modal fade modal-lg" id="modalCarrinho" tabindex="-1" aria-labelledby="modalCarrinhoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCarrinhoLabel">Carrinho de compras</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="modalRender" class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer" style="display:flex;justify-content: space-between;">
+                    <div id="valorTotal">
+                        <h3>Valor total: R$ 0,00</h3>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" id="btnConfirmar" class="btn btn-success bg-green200">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/bootstrap5.3.8/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/ecommerce/ecommerce.js"></script>
+</body>
+
 </html>

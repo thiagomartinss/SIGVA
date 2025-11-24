@@ -1,14 +1,18 @@
-const EquipamentoModel=require("../models/equipamentoModel");
-const ProdutoModel=require("../models/produtoModel");
+const EquipamentoModel = require("../models/equipamentoModel");
+const ProdutoModel = require("../models/produtoModel");
+const ServicoModel = require("../models/servicoModel");
 
-class OrdemServicoController{
-    async ordemView(req,res){
-        let equipamento=new EquipamentoModel();
-        let produto=new ProdutoModel();
-        const listaEquipamentos= await equipamento.listarEquipamentosParaOrdem();
-        const listaProdutos=await produto.listarProdutos();
+class OrdemServicoController {
+    async ordemView(req, res) {
+        let equipamento = new EquipamentoModel();
+        let produto = new ProdutoModel();
+        let servico = new ServicoModel();
 
-        res.render('ordemServico/ordemServico',{listaEquipamentos:listaEquipamentos,listaProdutos:listaProdutos});
+        const listaEquipamentos = await equipamento.listarEquipamentosParaOrdem();
+        const listaProdutos = await produto.listarProdutos();
+        const listaServicos = await servico.listarServico();
+
+        res.render('ordemServico/ordemServico', { listaEquipamentos: listaEquipamentos, listaProdutos: listaProdutos, listaServicos: listaServicos });
     }
 }
-module.exports=OrdemServicoController;
+module.exports = OrdemServicoController;

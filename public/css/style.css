@@ -73,3 +73,19 @@
   width: 5px; 
   background-color: #198754; 
 }
+
+    .btn-semear {
+        background-color: #27812E;
+        border-color: #27812E;
+        color: #fff;
+    }
+
+    .btn-semear:hover {
+        background-color: #1f6b25;
+        border-color: #1f6b25;
+        color: #fff;
+    }
+
+    #carrinhoLaterl {
+        width: 250px !important;
+    }

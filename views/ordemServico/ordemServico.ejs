@@ -87,12 +87,45 @@
                             </select>
                             <label for="Endereco">Endereço</label>
                         </div>
-                        <div class="form-floating mb-3">
-                            <select class="form-select" id="Servico">
-                                <option value="" selected disabled>Selecione o Serviço</option>
-                            </select>
-                            <label for="Servico">Serviço</label>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input border border-2 border-primary" type="checkbox"
+                                id="checkServico">
+                            <label class="form-check-label" for="checkServico">
+                                Selecione os serviços utilizados:
+                            </label>
                         </div>
+
+                        <div id="divServico" class="form-floating mb-3" style="display: none;">
+                            <label class="form-label mt-3">Serviços utilizados:</label> <br>
+
+                            <div class="container border rounded p-3">
+                                <div class="row">
+                                    <% listaServicos.map(function(servico) { %>
+                                        <div class="col-md-4">
+                                            <div class="d-flex align-items-center gap-2 mt-3">
+                                                <input
+                                                    class="form-check-input border border-2 border-primary servico-checkbox"
+                                                    type="checkbox" data-id="<%= servico.servicoId %>"
+                                                    value="<%= servico.servicoId %>">
+
+                                                <label class="form-check-label fw-bold mb-0">
+                                                    <%= servico.servicoDesc %>
+                                                </label>
+
+                                                <!-- <div id="serv-wrapp<%=// servico.servicoId %>" style="display: none;">
+                                                    <input type="number"
+                                                        class="form-control form-control-sm border border-2 border-secondary"
+                                                        id="serv-quant<%=// servico.servicoId %>" style="width: 60px;"
+                                                        min="1" value="1">
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="descricaoOS"
                                 placeholder="Descriçao da Ordem de serviço">
@@ -101,37 +134,68 @@
                         <div class="form-check mb-3">
                             <input class="form-check-input border border-2 border-primary" type="checkbox"
                                 id="checkEquipamento">
-                            <label class="form-check-label" for="checkEquipamento"> Foram ultilizados equipamento?
+                            <label class="form-check-label" for="checkEquipamento">
+                                Foram utilizados equipamentos?
                             </label>
                         </div>
 
                         <div id="divEquipamento" class="form-floating mb-3" style="display: none;">
+                            <label class="form-label mt-3">Equipamentos utilizados:</label> <br>
 
-                            <label class="form-label mt-3 ">Equipamentos ultilizados:</label> <br>
                             <div class="container border rounded p-3">
                                 <div class="row">
                                     <% listaEquipamentos.map(function(equipamento) { %>
                                         <div class="col-md-4">
                                             <div class="d-flex align-items-center gap-2 mt-3">
-
-                                                
                                                 <input
                                                     class="form-check-input border border-2 border-primary equipamento-checkbox"
-                                                    type="checkbox" id="equipamentoqntd"
-                                                    data-id="<%= equipamento.equipamentoId %>"
+                                                    type="checkbox" data-id="<%= equipamento.equipamentoId %>"
                                                     value="<%= equipamento.equipamentoId %>">
-
-                                                
-                                                <label class="form-check-label fw-bold mb-0 ms-1">
+                                                <label class="form-check-label fw-bold mb-0">
                                                     <%= equipamento.equipamentoNome %>
                                                 </label>
+                                                <div id="equip-wrapp<%= equipamento.equipamentoId %>"
+                                                    style="display: none;">
+                                                    <input type="number"
+                                                        class="form-control form-control-sm border border-2 border-secondary"
+                                                        id="equip-quant<%= equipamento.equipamentoId %>"
+                                                        style="width: 60px;" min="1" value="1">
+                                                </div>
 
-                                               
-                                                <div class="quantidade-wrap   border-2 border-primary" aria-placeholder="quantidade"
-                                                    id="quant-wrapp<%= equipamento.equipamentoId %>"
-                                                    style="display: none; margin-left: 8px;">
-                                                    <input type="number" class="form-control form-control-sm"
-                                                        id="quant_<%= equipamento.equipamentoId %>"  style="width: 60px;"
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input border border-2 border-primary" type="checkbox"
+                                id="checkProdutos">
+                            <label class="form-check-label" for="checkProdutos">
+                                Foram utilizados produtos?
+                            </label>
+                        </div>
+
+                        <div id="divProdutos" class="form-floating mb-3" style="display: none;">
+                            <label class="form-label mt-3">Produtos utilizados:</label> <br>
+
+                            <div class="container border rounded p-3">
+                                <div class="row">
+                                    <% listaProdutos.map(function(produto) { %>
+                                        <div class="col-md-4">
+                                            <div class="d-flex align-items-center gap-2 mt-3">
+                                                <input
+                                                    class="form-check-input border border-2 border-primary produto-checkbox"
+                                                    type="checkbox" data-id="<%= produto.produtoId %>"
+                                                    value="<%= produto.produtoId %>">
+                                                <label class="form-check-label fw-bold mb-0">
+                                                    <%= produto.produtoNome %>
+                                                </label>
+                                                <div id="prod-wrapp<%= produto.produtoId %>" style="display: none;">
+                                                    <input type="number"
+                                                        class="form-control form-control-sm border border-2 border-secondary"
+                                                        id="prod-quant<%= produto.produtoId %>" style="width: 60px;"
                                                         min="1" value="1">
                                                 </div>
 
@@ -141,46 +205,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-check mb-3">
-                            <input class="form-check-input border border-2 border-primary" type="checkbox"
-                                id="checkProdutos">
-                            <label class="form-check-label" for="checkProdutos">
-                                Foram ultilizados Produtos?
-                            </label>
-                        </div>
-                        <div id="divProdutos" class="form-floating mb-3" style="display: none;">
-                            <label class="form-label mt-3 ">Produtos ultilizados:</label> <br>
-                            <div class="container border rounded p-3">
-                                <div class="row">
-                                    <% //listaEquipamentos.map(function(equipamento) { %><!--POR HORA EQUUIPAMENTOS-->
-                                        <div class="col-md-4">
-                                            <div class="form-check mt-3">
-                                                <input
-                                                    class="form-check-input border border-2 border-primary produto-checkbox"
-                                                    type="checkbox" id="produtoqntd"
-                                                    data-id="<%=/// produto.produtoId%>"
-                                                    value="<%=//produto.produtoId%>">
-                                                <!--usarei para mandar a quantidade -->
 
-                                                <label class="form-check-label fw-bold">
-                                                    <%= //produto.produtoNome%>
-                                                </label>
-                                                <!--uso a classe quantidade-box so aparece se marcar o campo do equip-->
-
-                                                <div class="form-floating mb-3 mt-1 quantidade-wrap"
-                                                    id="quant-wrapp<%=// produto.produtoId %>" style="display: none;">
-                                                    <input type="number" class="form-control"
-                                                        id="quant_<%=// produto.produtoId %>">
-                                                    <label for="quant_<%=// produto.produtoId %>">Quantidade
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <% // }) %>
-                                </div>
-                            </div>
-
-                        </div>
 
                         <!--FAZER O FINAL O VALOR TOTAL DA ORDEM-->
 

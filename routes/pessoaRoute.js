@@ -5,8 +5,8 @@ const pessoaController= new PessoaController();
 
 router.get("/",pessoaController.pessoaView);
 router.post("/cadastrar", pessoaController.cadastrar);
-//router.get("/buscar/:id", pessoaController.buscar);
-//router.post("/alterar", pessoaController.alterar);
-//router.post("/excluir", pessoaController.excluir);
+router.get("/buscar/:id", pessoaController.buscar);
+router.post("/alterar", pessoaController.alterar);
+router.post("/excluir", pessoaController.excluir);
 
 module.exports = router;

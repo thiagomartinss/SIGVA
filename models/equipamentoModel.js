@@ -68,7 +68,12 @@ class EquipamentoModel {
     async cadastrarEquipamento(){
         if(this.#equipamentoId == 0){
             let sql = "INSERT INTO EQUIPAMENTO (DESC_EQUIPAMENTO, MODEL_EQUIPAMENTO, QTD_EQUIPAMENTO, ID_MARCA) VALUES (?, ?, ?, ?)";
-            let valores = [this.#equipamentoNome, this.#equipamentoModelo, this.#equipamentoEstoque, this.#marcaId];
+            let valores = [
+                this.#equipamentoNome, 
+                this.#equipamentoModelo, 
+                this.#equipamentoEstoque, 
+                this.#marcaId
+            ];
 
             return await conexao.ExecutaComandoNonQuery(sql, valores);
         } else {// analisar depois se seria melhor criar uma function atualizarEquipamento

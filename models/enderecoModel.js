@@ -68,6 +68,19 @@ class EnderecoModel{
         
         return result.insertId;
     }
+
+    async atualizar(idEndereco, connection) {
+        let sql = "UPDATE ENDERECO SET CEP = ?, LOGRADOURO = ?, NUMERO = ?, BAIRRO = ?, ID_CIDADE = ? WHERE ID_ENDERECO = ?";
+        let valores = [this.#cep, this.#logradouro, this.#numero, this.#bairro, this.#cidadeId, idEndereco];
+        
+        return await conexao.ExecutaComandoNonQuery(sql, valores, connection);
+    }
+
+    async excluir(idEndereco, connection) {
+        let sql = "DELETE FROM ENDERECO WHERE ID_ENDERECO = ?";
+        
+        return await conexao.ExecutaComandoNonQuery(sql, [idEndereco], connection);
+    }
 }
 
 module.exports = EnderecoModel;

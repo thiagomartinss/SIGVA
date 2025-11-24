@@ -26,6 +26,17 @@ class PessoaJuridicaModel{
 
         return await conexao.ExecutaComandoNonQuery(sql, valores, connection);
     }
+
+    async atualizar(connection) {
+        let sql = "UPDATE PESSOA_JURIDICA SET CNPJ = ?, RAZAO_SOCIAL = ?, NOME_FANTASIA = ? WHERE ID_PESSOAJURIDICA = ?";
+        let valores = [this.#cnpj, this.#razaoSocial, this.#nomeFantasia, this.#idPessoa];
+        return await conexao.ExecutaComandoNonQuery(sql, valores, connection);
+    }
+
+    async excluir(id, connection) {
+        let sql = "DELETE FROM PESSOA_JURIDICA WHERE ID_PESSOAJURIDICA = ?";
+        return await conexao.ExecutaComandoNonQuery(sql, [id], connection);
+    }
 }
 
 module.exports = PessoaJuridicaModel;

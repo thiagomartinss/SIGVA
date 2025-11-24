@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function(){
     let msgUf = document.querySelector("#msg-uf");
     let msgPerfil = document.querySelector("#msg-perfil");
     let msgPessoa = document.querySelector("#msg-pessoa");
+    let msgPessoaAlt = document.querySelector("#msg-pessoaAlt");
 
     const inputNome = document.querySelector("#nome");
     const inputCpf = document.querySelector("#cpf");
@@ -45,7 +46,12 @@ document.addEventListener("DOMContentLoaded", function(){
     const selectCidade = document.querySelector("#cidade");
     const selectUf = document.querySelector("#uf");
 
+    const inputCepAlt = document.querySelector("#cepAlt");
+    const inputTelefoneAlt = document.querySelector("#telefoneAlt")
+
     const btnCadastrar = document.querySelector("#btnCadastrar");
+    const btnAlterar = document.querySelector("#btnAlterar");
+    const btnExcluir = document.querySelector("#btnConfirmarExclusao");
 
     inputCpf.addEventListener('input', function() {
         inputCpf.style.borderColor = "#ced4da"; 
@@ -193,12 +199,185 @@ document.addEventListener("DOMContentLoaded", function(){
             });
     });
 
+    if(inputCepAlt){
+        inputCepAlt.addEventListener('blur', function() {
+            let cep = inputCepAlt.value.replace(/\D/g, '');
+
+            if (cep.length !== 8) {
+                return; 
+            }
+            let logradouroAlt = document.getElementById("logradouroAlt");
+            let bairroAlt = document.getElementById("bairroAlt");
+            let cidadeAlt = document.getElementById("cidadeAlt");
+            let ufAlt = document.getElementById("ufAlt");
+            let numeroAlt = document.getElementById("numeroAlt");
+
+            logradouroAlt.value = "Pesquisando...";
+
+            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+                        alert("CEP não encontrado!");
+                        logradouroAlt.value = "";
+                        bairroAlt.value = "";
+                        return;
+                    }
+
+                    logradouroAlt.value = data.logradouro;
+                    bairroAlt.value = data.bairro;
+
+                    selecionarOpcaoPorTexto(ufAlt, data.uf);
+                    selecionarOpcaoPorTexto(cidadeAlt, data.localidade);
+
+ 
+                    if(numeroAlt) numeroAlt.focus();
+                })
+                .catch(error => {
+                    console.error(error);
+                    logradouroAlt.value = "";
+                    alert("Erro ao buscar CEP");
+                });
+        });
+    }
+
+    if(inputTelefoneAlt){
+        inputTelefoneAlt.addEventListener('input', function() {
+            inputTelefoneAlt.style.borderColor = "#ced4da";
+            let value = inputTelefoneAlt.value.replace(/\D/g, ""); 
+            
+            if (value.length > 11) value = value.slice(0, 11); 
+
+            if (value.length > 10) {
+                value = value.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1) $2-$3");
+            } else if (value.length > 5) {
+                value = value.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d\d)(\d{0,5})/, "($1) $2");
+            }
+            inputTelefoneAlt.value = value;
+        });
+    }
+
+    if(inputCepAlt){
+        inputCepAlt.addEventListener('input', function() {
+            inputCepAlt.style.borderColor = "#ced4da"; 
+            let value = inputCepAlt.value.replace(/\D/g, ""); 
+            if (value.length > 8) value = value.slice(0, 8);
+            value = value.replace(/^(\d{5})(\d)/, "$1-$2");
+            inputCepAlt.value = value;
+        });
+    }
+
     const modal = document.getElementById('modalPessoa')
-        modal.addEventListener('show.bs.modal', event => {
+    modal.addEventListener('show.bs.modal', event => {
         limparFormulario();
     });
 
+    const modalAlt = document.getElementById('modalPessoaAlt');
+    modalAlt.addEventListener('show.bs.modal', event => {
+        limparValidacaoAlt(); 
+    });
+
+    const modalDel = document.getElementById('modalPessoaDel');
+    modalDel.addEventListener('show.bs.modal', event => {
+        const msgExc = document.getElementById("msg-pessoaExc");
+        if(msgExc) msgExc.innerText = "";
+    });
+
+    const botoesAlteracao = document.querySelectorAll(".btnAlteracao");
+    botoesAlteracao.forEach(function(botao){
+        botao.addEventListener("click", function(){
+            const id = this.getAttribute("data-id");
+
+            fetch(`/pessoa/buscar/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if(data.ok && data.pessoa){
+                    let p = data.pessoa;
+                    let isCliente = (p.ehCliente == 1 || p.ehCliente == "1" || p.ehCliente === true);
+                    let isFornecedor = (p.ehFornecedor == 1 || p.ehFornecedor == "1" || p.ehFornecedor === true);
+                    console.log(p, isCliente, isFornecedor);
+                    document.getElementById("idPessoaAlt").value = p.pessoaId;
+                    document.getElementById("tipoPessoaAlt").value = p.tipo;
+                    document.getElementById("emailAlt").value = p.email;
+
+                    let tel = p.telefone.replace(/\D/g, "");
+                    if(tel.length === 11) 
+                        tel = tel.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+                    else if(tel.length === 10) 
+                        tel = tel.replace(/^(\d{2})(\d{4})(\d{4}).*/, "($1) $2-$3");
+                    
+                    document.getElementById("telefoneAlt").value = tel; 
+
+                    let cepFormatado = p.cep.replace(/\D/g, "");
+                    if(cepFormatado.length === 8) {
+                        cepFormatado = cepFormatado.replace(/^(\d{5})(\d)/, "$1-$2");
+                    }
+                    document.getElementById("cepAlt").value = cepFormatado;
+
+                    document.getElementById("logradouroAlt").value = p.logradouro;
+                    document.getElementById("numeroAlt").value = p.numero;
+                    document.getElementById("bairroAlt").value = p.bairro;
+                    document.getElementById("cidadeAlt").value = p.cidadeId;
+                    document.getElementById("ufAlt").value = p.ufId;
+
+                    document.getElementById("checkClienteAlt").checked = isCliente;
+                    document.getElementById("checkFornecedorAlt").checked = isFornecedor;
+
+                    if(p.tipo === 'PF'){
+                        document.getElementById("camposPFAlt").style.display = "block";
+                        document.getElementById("camposPJAlt").style.display = "none";
+                        document.getElementById("nomeAlt").value = p.nome;
+                        let chkFornecedorAlt = document.getElementById("checkFornecedorAlt");
+                        chkFornecedorAlt.checked = false;
+                        chkFornecedorAlt.disabled = true;
+                        let cpfFormatado = p.cpf.replace(/\D/g, ""); 
+                        cpfFormatado = cpfFormatado.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+                        document.getElementById("cpfAlt").value = cpfFormatado;
+
+                        if(p.dataNascimento) {
+                            let dataFormatada = new Date(p.dataNascimento).toISOString().split('T')[0];
+                            document.getElementById("dtNascimentoAlt").value = dataFormatada;
+                        }
+                    } else {
+                        document.getElementById("camposPFAlt").style.display = "none";
+                        document.getElementById("camposPJAlt").style.display = "block";
+                        document.getElementById("checkFornecedorAlt").disabled = false;
+                        let cnpjFormatado = p.cnpj.replace(/\D/g,""); 
+                        cnpjFormatado = cnpjFormatado.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+                        document.getElementById("cnpjAlt").value = cnpjFormatado; 
+
+                        document.getElementById("razaoSocialAlt").value = p.razaoSocial;
+                        document.getElementById("nomeFantasiaAlt").value = p.nomeFantasia;
+                    }
+
+                     var modalAlt2 = new bootstrap.Modal(document.getElementById('modalPessoaAlt'));
+                     modalAlt2.show();
+                } else {
+                    alert(data.msg || "Erro ao buscar dados.");
+                }
+            })
+        });
+    });
+
+    const botoesExclusao = document.querySelectorAll(".btnExclusao");
+    botoesExclusao.forEach(function(botao){
+        botao.addEventListener("click", function(){
+            const id = this.getAttribute("data-id");
+            const nome = this.getAttribute("data-nome");
+
+            document.getElementById("nomeExclusao").innerText = nome;
+            document.getElementById("idPessoaExcluir").value = id;
+            
+            var modalDel = new bootstrap.Modal(document.getElementById('modalPessoaDel'));
+            modalDel.show();
+        });
+    });
+
     btnCadastrar.addEventListener("click", cadastrar);
+    btnAlterar.addEventListener("click", alterar);
+    btnExcluir.addEventListener("click", excluir);
 
     checkPf.addEventListener("change", function() {
         if (checkPf.checked) {
@@ -267,6 +446,196 @@ document.addEventListener("DOMContentLoaded", function(){
                     window.location.href="/pessoa";
                 } else {
                     msgPessoa.innerHTML = r.msg;
+                }
+            });
+        }
+    }
+
+    function alterar(){
+        limparValidacaoAlt();
+
+        let id = document.getElementById("idPessoaAlt").value;
+        let tipo = document.getElementById("tipoPessoaAlt").value; 
+        let elNome = document.getElementById("nomeAlt");
+        let elDtNasc = document.getElementById("dtNascimentoAlt");
+        let elRazao = document.getElementById("razaoSocialAlt");
+        let elFantasia = document.getElementById("nomeFantasiaAlt");
+        let elEmail = document.getElementById("emailAlt");
+        let elTelefone = document.getElementById("telefoneAlt");
+        let elCep = document.getElementById("cepAlt");
+        let elLogradouro = document.getElementById("logradouroAlt");
+        let elNumero = document.getElementById("numeroAlt");
+        let elBairro = document.getElementById("bairroAlt");
+        let elCidade = document.getElementById("cidadeAlt");
+        let elUf = document.getElementById("ufAlt");
+        let elCheckCliente = document.getElementById("checkClienteAlt");
+        let elCheckFornecedor = document.getElementById("checkFornecedorAlt");
+        let email = elEmail.value.trim();
+        let telefone = elTelefone.value.replace(/\D/g, "");
+        let cep = elCep.value.replace(/\D/g, "");
+        let logradouro = elLogradouro.value;
+        let numero = elNumero.value;
+        let bairro = elBairro.value;
+        let cidadeId = elCidade.value;
+        let ufId = elUf.value;
+        let ehCliente = elCheckCliente.checked;
+        let ehFornecedor = elCheckFornecedor.checked;
+        let listaErros = [];
+
+        if(tipo === 'PF'){
+            let nome = elNome.value.toUpperCase().trim();
+            let dataNasc = elDtNasc.value;
+
+            if(nome == "") {
+                listaErros.push("nomeAlt");
+                document.getElementById("msg-nomeAlt").innerText = "Nome é obrigatório";
+                elNome.style.borderColor = "red";
+            } else if (nome.split(" ").filter(p => p !== "").length < 2) {
+                listaErros.push("nomeAlt");
+                document.getElementById("msg-nomeAlt").innerText = "Digite o nome completo";
+                elNome.style.borderColor = "red";
+            }
+
+            if(dataNasc == "") {
+                listaErros.push("dtNascimentoAlt");
+                document.getElementById("msg-dtNascimentoAlt").innerText = "Data obrigatória";
+                elDtNasc.style.borderColor = "red";
+            } else {
+                let erroData = validarDataNascimento(dataNasc); // Reutiliza sua função
+                if(erroData != "") {
+                    listaErros.push("dtNascimentoAlt");
+                    document.getElementById("msg-dtNascimentoAlt").innerText = erroData;
+                    elDtNasc.style.borderColor = "red";
+                }
+            }
+        } 
+        else {
+            let razao = elRazao.value.toUpperCase().trim();
+            let fantasia = elFantasia.value.toUpperCase().trim();
+
+            if(razao == "") {
+                listaErros.push("razaoAlt");
+                document.getElementById("msg-razaoAlt").innerText = "Razão Social obrigatória";
+                elRazao.style.borderColor = "red";
+            }
+            if(fantasia == "") {
+                listaErros.push("fantasiaAlt");
+                document.getElementById("msg-fantasiaAlt").innerText = "Nome Fantasia obrigatório";
+                elFantasia.style.borderColor = "red";
+            }
+        }
+
+        if(email == "") {
+            listaErros.push("emailAlt");
+            document.getElementById("msg-emailAlt").innerText = "Email obrigatório";
+            elEmail.style.borderColor = "red";
+        } else if (!validarEmail(email)) { 
+            listaErros.push("emailAlt");
+            document.getElementById("msg-emailAlt").innerText = "Email inválido";
+            elEmail.style.borderColor = "red";
+        }
+        if(telefone == "") {
+            listaErros.push("telefoneAlt");
+            document.getElementById("msg-telefoneAlt").innerText = "Celular obrigatório";
+            elTelefone.style.borderColor = "red";
+        } else if (!validarTelefone(elTelefone.value)) { 
+             listaErros.push("telefoneAlt");
+             document.getElementById("msg-telefoneAlt").innerText = "Telefone inválido";
+             elTelefone.style.borderColor = "red";
+        }
+
+        if(cep == "") {
+            listaErros.push("cepAlt");
+            document.getElementById("msg-cepAlt").innerText = "CEP obrigatório";
+            elCep.style.borderColor = "red";
+        }
+        if(logradouro.trim() == "") {
+            listaErros.push("logradouroAlt");
+            document.getElementById("msg-logradouroAlt").innerText = "Logradouro obrigatório";
+            elLogradouro.style.borderColor = "red";
+        }
+        if(numero.trim() == "") {
+            listaErros.push("numeroAlt");
+            document.getElementById("msg-numeroAlt").innerText = "Número obrigatório";
+            elNumero.style.borderColor = "red";
+        }
+        if(bairro.trim() == "") {
+            listaErros.push("bairroAlt");
+            document.getElementById("msg-bairroAlt").innerText = "Bairro obrigatório";
+            elBairro.style.borderColor = "red";
+        }
+        if(cidadeId == "" || cidadeId == null) {
+            listaErros.push("cidadeAlt");
+            document.getElementById("msg-cidadeAlt").innerText = "Selecione a cidade";
+            elCidade.style.borderColor = "red";
+        }
+        if(ufId == "" || ufId == null) {
+            listaErros.push("ufAlt");
+            document.getElementById("msg-ufAlt").innerText = "Selecione o estado";
+            elUf.style.borderColor = "red";
+        }
+
+        if(!ehCliente && !ehFornecedor){
+            listaErros.push("perfilAlt");
+            document.getElementById("msg-pessoaAlt").innerText = "Selecione pelo menos um perfil (Cliente ou Fornecedor)";
+        }
+
+        if(listaErros.length > 0) {
+            return; 
+        }
+
+        let dados = {
+            id: id,
+            tipoPessoa: tipo,
+            email: email,
+            telefone: telefone,
+            cep: cep,
+            logradouro: logradouro,
+            numero: numero,
+            bairro: bairro,
+            cidadeId: cidadeId,
+            ufId: ufId,
+            ehCliente: ehCliente,
+            ehFornecedor: ehFornecedor
+        };
+
+        if(tipo === 'PF'){
+            dados.nome = elNome.value.toUpperCase();
+            dados.dataNascimento = elDtNasc.value;
+        } else {
+            dados.razaoSocial = elRazao.value.toUpperCase();
+            dados.nomeFantasia = elFantasia.value.toUpperCase();
+        }
+
+        fetch("/pessoa/alterar", {
+            method: 'POST',
+            body: JSON.stringify(dados),
+            headers: { "Content-Type": "application/json" }
+        })
+        .then(r => r.json())
+        .then(r => {
+            if(r.ok) {
+                window.location.reload();
+            } else {
+                document.getElementById("msg-pessoaAlt").innerText = r.msg;
+            }
+        });
+    }
+
+    function excluir() {
+        const id = document.getElementById("idPessoaExcluir").value;
+        if(id) {
+            fetch('/pessoa/excluir', {
+                method: 'POST',
+                body: JSON.stringify({ id: id }),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(r => r.json())
+            .then(r => {
+                if(r.ok) {
+                    window.location.reload();
+                } else {
+                    alert(r.msg);
                 }
             });
         }
@@ -669,6 +1038,40 @@ document.addEventListener("DOMContentLoaded", function(){
         msgUf.innerText = "";
         msgPerfil.innerText = "";
     }
+
+    function limparValidacaoAlt(){
+        let msgPessoaAlt = document.getElementById("msg-pessoaAlt");
+        if(msgPessoaAlt) msgPessoaAlt.innerText = "";
+
+        const campos = [
+            "nomeAlt", "dtNascimentoAlt", 
+            "razaoSocialAlt", "nomeFantasiaAlt", 
+            "telefoneAlt", "emailAlt", 
+            "cepAlt", "logradouroAlt", "numeroAlt", "bairroAlt", "cidadeAlt", "ufAlt" 
+        ];
+
+        const spans = [
+            "msg-nomeAlt", "msg-dtNascimentoAlt",
+            "msg-razaoAlt", "msg-fantasiaAlt",
+            "msg-telefoneAlt", "msg-emailAlt",
+            "msg-cepAlt", "msg-logradouroAlt", "msg-numeroAlt", "msg-bairroAlt", "msg-cidadeAlt", "msg-ufAlt"
+        ];
+
+        campos.forEach(id => {
+            let elemento = document.getElementById(id);
+            if(elemento){
+                elemento.style.borderColor = "#ced4da";
+            }
+        });
+
+        spans.forEach(id => {
+            let elemento = document.getElementById(id);
+            if(elemento){
+                elemento.innerText = "";
+            }
+        });
+    }
+
 
     function limparFormulario(){
         limparValidacao();

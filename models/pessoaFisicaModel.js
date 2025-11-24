@@ -27,6 +27,19 @@ class PessoaFisicaModel{
 
         return await conexao.ExecutaComandoNonQuery(sql, valores, connection);
     }
+
+    async atualizar(connection) {
+        let sql = "UPDATE PESSOA_FISICA SET NOME = ?, CPF = ?, DT_NASCIMENTO = ? WHERE ID_PESSOAFISICA = ?";
+        let valores = [this.#nome, this.#cpf, this.#dataNascimento, this.#idPessoa];
+        
+        return await conexao.ExecutaComandoNonQuery(sql, valores, connection);
+    }
+
+    async excluir(id, connection) {
+        let sql = "DELETE FROM PESSOA_FISICA WHERE ID_PESSOAFISICA = ?";
+        
+        return await conexao.ExecutaComandoNonQuery(sql, [id], connection);
+    }
 }
 
 module.exports = PessoaFisicaModel;

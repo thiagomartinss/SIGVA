@@ -109,6 +109,7 @@ class ProdutoController{
 
         res.send({produto: produto})
     }
+    
 }
 
 module.exports = ProdutoController;

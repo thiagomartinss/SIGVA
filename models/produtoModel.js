@@ -57,7 +57,7 @@ class ProdutoModel {
                 } else {
                     imagem = "produto-sem-imagem.webp";
                 }
-                listaRetorno.push(new ProdutoModel(row['ID_PRODUTO'],row['DESC_PRODUTO'],row['VALOR_VENDA'],row['VALOR_COMPRA'],row['QTD_ESTOQUE'],row['MARCA_ID_MARCA'],row['TIPO_PRODUTO_ID_TIPO'],row['DESC_MARCA'],row['TIPO_DESCRICAO'],imagem
+                listaRetorno.push(new ProdutoModel(row['ID_PRODUTO'], row['DESC_PRODUTO'], row['VALOR_VENDA'], row['VALOR_COMPRA'], row['QTD_ESTOQUE'], row['MARCA_ID_MARCA'], row['TIPO_PRODUTO_ID_TIPO'], row['DESC_MARCA'], row['TIPO_DESCRICAO'], imagem
                 ));
             }
         }
@@ -125,6 +125,12 @@ class ProdutoModel {
         }
         return null
     }
+    async atualizarEstoque(id, novaQuantidade) {
+        let sql = "update tb_produto set prd_quantidade = ? where prd_id = ?";
+        let valores = [novaQuantidade, id];
+
+        return await conexao.ExecutaComandoNonQuery(sql, valores) > 0;
+    }
 
 
     toJSON() {
@@ -132,7 +138,8 @@ class ProdutoModel {
             id: this.#produtoId,
             nome: this.#produtoNome,
             preco: this.#valorVenda,
-            imagem: this.#produtoImagem
+            imagem: this.#produtoImagem,
+            estoque: this.#qtdEstoque
         }
     }
 }

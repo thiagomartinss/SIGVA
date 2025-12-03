@@ -76,27 +76,47 @@ document.addEventListener("DOMContentLoaded", function () {
     function adicionarAoCarrinho() {
         let produtoId = this.dataset.produto;
         let that = this;
+
         fetch("/produto/obter/" + produtoId)
-            .then(function (cabecalho) {
-                return cabecalho.json();
-            })
-            .then(function (corpo) {
+            .then(r => r.json())
+            .then(corpo => {
+
                 let produto = corpo.produto;
+                console.log("bloco do prod:", produto);
+
+                let spanErro = this.parentElement.querySelector(".erro-estoque");
+                if (!spanErro) {
+                    spanErro = document.createElement("span");
+                    spanErro.classList.add("erro-estoque");
+                    spanErro.style.color = "red";
+                    spanErro.style.display = "block";
+                    this.parentElement.appendChild(spanErro);
+                }
+                let estoque = produto.estoque ?? produto.qtd_estoque ?? produto.QTD_ESTOQUE ?? 0;
+
+                if (estoque <= 0) {
+                    spanErro.innerText = "Produto esgotado! (Estoque atual: 0)";
+                    return;
+                } else {
+                    spanErro.innerText = "";
+                }
+
                 let produtoCarrinho = carrinho.filter(p => p.id == produto.id);
+
                 if (produtoCarrinho.length == 0) {
                     produto.quantidade = 1;
                     carrinho.push(produto);
-                }
-                else {
+                } else {
                     produtoCarrinho[0].quantidade += 1;
                 }
                 localStorage.setItem("carrinho", JSON.stringify(carrinho));
                 contador.innerText = carrinho.length;
-                that.innerHTML = "<i class='fas fa-check'></i> Produto Adicionado ao Carinho!";
-                setTimeout(function () {
-                    that.innerHTML = `<i class="bi-cart-fill me-1"></i> Adicionar ao carrinho`
-                }, 3000)
-            })
+
+                that.innerHTML = "<i class='fas fa-check'></i> Produto Adicionado ao carrinho!";
+                setTimeout(() => {
+                    that.innerHTML = '<i class="bi-cart-fill me-1"></i> Adicionar ao carrinho';
+                }, 3000);
+            });
     }
     function atualizaCarrinho() {
         localStorage.setItem("carrinho", JSON.stringify(carrinho));

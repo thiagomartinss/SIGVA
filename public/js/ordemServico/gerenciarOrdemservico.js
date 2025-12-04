@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-        document.getElementById('checkServico').addEventListener('change', function () {
+    document.getElementById('checkServico').addEventListener('change', function () {
         const divServicos = document.getElementById('divServico');
         if (this.checked) {
             divServicos.style.display = 'block';
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const checkQuantS = document.querySelectorAll('.servico-checkbox'); // SERVIÇOS
 
     function quantServico(checkbox) {
-        const id = checkbox.dataset.id; 
+        const id = checkbox.dataset.id;
         const wrapp = document.getElementById("serv-wrapp" + id);
         const input = document.getElementById("serv-quant" + id);
 
@@ -107,39 +107,42 @@ document.addEventListener("DOMContentLoaded", function () {
     BtnDrop.addEventListener("click", function () {
         dropMenu.classList.toggle("show");
         pesquisaInput.value = "";
-        filtragem("");
+        itens.innerHTML = "";
         pesquisaInput.focus();
     });
     pesquisaInput.addEventListener("input", function (e) {
-        filtragem(e.target.value);
-    });
-    function filtragem(filter) {
-        const itensC = itens.querySelectorAll(".dropdown-item");
-        let visivel = 0;
-        itensC.forEach(function (item) {
-            if (item.textContent.toLowerCase().includes(filter.toLowerCase())) {
-                item.style.display = "block"
-                visivel++;
-            } else {
-                item.style.display = "none"
-            }
-        });
-        if (visivel === 0) {
-            itens.innerHTML = "<div class='text-danger px-2' >Nenhum Resultado encontrado</div>"
+        let texto = e.target.value;
 
-        } else {
-            if (itens.querySelector('.text-muted')) {
-                itens.querySelector('.text-muted').remove();
-            }
+        fetch("/pessoa/buscarPorNome/" + texto)
+            .then(r => r.json())
+            .then(data => {
+                montarLista(data.pessoas);
+            });
+    });
+    function montarLista(pessoas) {
+        itens.innerHTML = "";
+
+        if (pessoas.length === 0) {
+            itens.innerHTML = "<div class='px-2 text-danger'>Nenhum resultado encontrado</div>";
+            return;
         }
+
+        pessoas.forEach(p => {
+            let div = document.createElement("div");
+            div.classList.add("dropdown-item");
+            div.dataset.id = p.PESSOA_ID;
+            div.textContent = p.NOME;
+            itens.appendChild(div);
+        });
     }
-    itens.addEventListener("click", function (e) {//escolhendo uma opçao
+    itens.addEventListener("click", function (e) {
         if (e.target.classList.contains("dropdown-item")) {
-            BtnDrop.textContent = e.target.textContent;
+            document.getElementById("nomePessoa").value = e.target.textContent;
             inputId.value = e.target.dataset.id;
             dropMenu.classList.remove("show");
         }
     });
+
     //fehcando o drop se clicar fora
     document.addEventListener("click", function (e) {
         if (!dropMenu.contains(e.target) && !BtnDrop.contains(e.target)) {

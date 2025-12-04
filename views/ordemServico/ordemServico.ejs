@@ -68,22 +68,29 @@
                                 Selecionar o Cliente
                             </button>
                         </div>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="nomePessoa" placeholder="Cliente selecionado"
-                                readonly>
-                            <label for="nomePessoa">Cliente selecionado</label>
-                            <input type="hidden" name="pessoaId" id="pessoaId" required>
-                        </div>
                         <div class="dropdown-menu p-2" id="PessoaMenu" style="width:100%;">
                             <input type="text" class="form-control search-input mb-2" placeholder="Pesquisar cliente..."
                                 id="pesquisaPessoa">
                             <div id="dropPessoaItem"></div>
                         </div>
                         <div class="form-floating mb-3">
-                            <select class="form-select" id="Endereco">
-                                <option value="" selected disabled>Selecione o Endereço</option>
-                            </select>
-                            <label for="Endereco">Endereço</label>
+                            <input type="text" class="form-control" id="nomePessoa" placeholder="Cliente selecionado"
+                                readonly>
+                            <label for="nomePessoa">Cliente selecionado</label>
+                            <input type="hidden" name="pessoaId" id="pessoaId" required>
+                        </div>
+                        <div class="mb-3 endereco-container d-none">
+                            <label for="cepPessoa">CEP:</label>
+                            <input type="text" class="form-control mb-2" id="cepPessoa" placeholder="CEP" readonly>
+                            <label for="logradouroPessoa">Logradouro:</label>
+                            <input type="text" class="form-control mb-2" id="logradouroPessoa" placeholder="Logradouro"
+                                readonly><!--campo de leitura nao pode ser editado e vai ser usado para enviar esses dados para o pedido da ordem dps-->
+                            <label for="bairroPessoa">Bairro:</label>
+                            <input type="text" class="form-control mb-2" id="bairroPessoa" placeholder="Bairro"
+                                readonly>
+                            <label for="cidadePessoa">Cidade:</label>
+                            <input type="text" class="form-control mb-2" id="cidadePessoa" placeholder="Cidade"
+                                readonly>
                         </div>
                         <div class="form-check mb-3">
                             <input class="form-check-input border border-2 border-primary" type="checkbox"

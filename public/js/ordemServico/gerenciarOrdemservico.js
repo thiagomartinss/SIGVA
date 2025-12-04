@@ -126,22 +126,45 @@ document.addEventListener("DOMContentLoaded", function () {
             itens.innerHTML = "<div class='px-2 text-danger'>Nenhum resultado encontrado</div>";
             return;
         }
-
         pessoas.forEach(p => {
             let div = document.createElement("div");
             div.classList.add("dropdown-item");
             div.dataset.id = p.PESSOA_ID;
+            div.dataset.nome = p.NOME;
+            div.dataset.cep = p.CEP;
+            div.dataset.logradouro = p.LOGRADOURO;
+            div.dataset.bairro = p.BAIRRO;
+            div.dataset.cidade = p.NOME_CID;
             div.textContent = p.NOME;
+
+            div.addEventListener("click", function () {
+
+                document.getElementById('cepPessoa').value = this.dataset.cep;
+                document.getElementById('logradouroPessoa').value = this.dataset.logradouro;
+                document.getElementById('bairroPessoa').value = this.dataset.bairro;
+                document.getElementById('cidadePessoa').value = this.dataset.cidade;
+
+                document.querySelector('.endereco-container').classList.remove('d-none');
+                itens.innerHTML = "";
+            });
+
             itens.appendChild(div);
         });
     }
     itens.addEventListener("click", function (e) {
         if (e.target.classList.contains("dropdown-item")) {
-            document.getElementById("nomePessoa").value = e.target.textContent;
+            document.getElementById("nomePessoa").value = e.target.dataset.nome;
             inputId.value = e.target.dataset.id;
+
+            document.getElementById("cepPessoa").value = e.target.dataset.cep;
+            document.getElementById("logradouroPessoa").value = e.target.dataset.logradouro;
+            document.getElementById("bairroPessoa").value = e.target.dataset.bairro;
+            document.getElementById("cidadePessoa").value = e.target.dataset.cidade;
+
             dropMenu.classList.remove("show");
         }
     });
+
 
     //fehcando o drop se clicar fora
     document.addEventListener("click", function (e) {

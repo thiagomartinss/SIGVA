@@ -167,19 +167,21 @@ class PessoaModel {
         return valor;
     }
     async listarClientesPorNome(nome) {
-        let sql = `
-        SELECT P.ID_PESSOA,
-               PF.NOME
-        FROM PESSOA P
-        INNER JOIN PESSOA_FISICA PF ON PF.ID_PESSOAFISICA = P.ID_PESSOA
-        WHERE PF.NOME LIKE ?
-        ORDER BY PF.NOME ASC
-    `;
-
+        let sql = ` 
+        SELECT P.ID_PESSOA, PF.NOME, E.LOGRADOURO,
+            E.NUMERO, E.BAIRRO, E.CEP, C.NOME_CID
+            FROM PESSOA P
+            INNER JOIN PESSOA_FISICA PF
+                ON PF.ID_PESSOAFISICA = P.ID_PESSOA
+            INNER JOIN ENDERECO E
+                ON P.ENDERECO_ID_ENDERECO = E.ID_ENDERECO
+            INNER JOIN CIDADE C
+                ON E.ID_CIDADE = C.ID_CIDADE
+            WHERE PF.NOME LIKE ?`;
         let valores = [`%${nome}%`];
 
         return await conexao.ExecutaComando(sql, valores);
-         
+
     }
 
 }

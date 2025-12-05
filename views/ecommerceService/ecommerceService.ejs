@@ -1,0 +1,117 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+<script src="/js/EcommerceService/ecommerceService.js"></script>
+<link rel="stylesheet" href="/css/style.css">
+<section>
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <% lista.map(function(value, index) { %>
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <div class="card-body p-6 d-flex flex-column h-100">
+
+                            <div class="text-center">
+                                <div class="d-flex justify-content-center small mb-2">
+                                    <h5 class="fw-bolder">
+                                        <%= value.servicoDesc %>
+                                    </h5>
+                                </div>
+
+                                <div class="text-center mt-auto">
+                                    R$ <%= value.servicoValor %>
+                                </div>
+                            </div>
+                            <div class="mt-auto">
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent mt-3
+                                ">
+                                    <div class="text-center">
+                                        <button data-produto="<%= value.servicoId %>" class="btn btn-semear Orcamento"
+                                            onclick="abrirModalOrcamento('<%= value.servicoId %>', '<%= value.servicoDesc %>', '<%=value.servicoValor%>')">
+                                            <i class="bi bi-clipboard-data"></i> Fazer Orçamento
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <% }) %>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="modalOrcamento">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Solicitar Orçamento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden" id="orc_servico_id">
+                <input type="hidden" id="orc_preco_base">
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="orc_servico" readonly>
+                    <label>Serviço</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="orc_email" placeholder="Seu e-mail">
+                    <label for="orc_email">Seu e-mail</label>
+
+                    <div id="msg-emailAlt" class="text-danger small"></div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="orc_areaTotal" onchange="calcularOrcamento()">
+                        <option value="">Selecione...</option>
+                        <option value="1-5">1 a 5 ha</option>
+                        <option value="5-20">5 a 20 ha</option>
+                        <option value="20-50">20 a 50 ha</option>
+                        <option value="50-100">50 a 100 ha</option>
+                        <option value="100+">100+ ha</option>
+                    </select>
+                    <label for="orc_areaTotal">Área total da propriedade (ha)</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="orc_cultura">
+                        <option value="">Selecione...</option>
+                        <option>Soja</option>
+                        <option>Sorgo</option>
+                        <option>Milho</option>
+                        <option>Cana</option>
+                        <option>Arroz</option>
+                        <option>Café</option>
+                        <option>Hortaliças</option>
+                        <option>Outra</option>
+                    </select>
+                    <label for="orc_cultura">Tipo de cultura</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" id="orc_obs" style="height:80px"
+                        placeholder="Observações"></textarea>
+                    <label for="orc_obs">Observações adicionais</label>
+                </div>
+
+                <div class="alert alert-info d-none" id="resultadoOrcamento"></div>
+
+
+                <span class="text-danger" id="msg-orc"></span>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success bg-green200" id="btnEnviarOrcamento">
+                    Enviar Orçamento
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

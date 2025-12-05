@@ -16,7 +16,7 @@ class Database {
             user: process.env.user, 
             password: process.env.password,
             waitForConnections: true,
-            connectionLimit: 100, 
+            connectionLimit: 2, 
             queueLimit: 0 
         });
     }

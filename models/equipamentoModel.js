@@ -80,7 +80,7 @@ class EquipamentoModel {
             let sql = "UPDATE EQUIPAMENTO SET DESC_EQUIPAMENTO = ?, MODEL_EQUIPAMENTO = ?, QTD_EQUIPAMENTO = ?, ID_MARCA = ? WHERE ID_EQUIPAMENTO = ?";
             let valores = [this.#equipamentoNome, this.#equipamentoModelo, this.#equipamentoEstoque, this.#marcaId, this.#equipamentoId];
 
-            return await conexao.ExecutaComandoNonQuery(sql, valores) > 0;
+            return await conexao.ExecutaComandoNonQuery(sql, valores);
         }
     }
 
@@ -91,7 +91,12 @@ class EquipamentoModel {
 
         if(rows.length > 0){
             let row = rows[0];
-            return new EquipamentoModel(row["ID_EQUIPAMENTO"], row["DESC_EQUIPAMENTO"], row['MODEL_EQUIPAMENTO'], row['QTD_EQUIPAMENTO'], row["ID_MARCA"]);
+            return new EquipamentoModel(
+                row["ID_EQUIPAMENTO"], 
+                row["DESC_EQUIPAMENTO"], 
+                row['MODEL_EQUIPAMENTO'], 
+                row['QTD_EQUIPAMENTO'], 
+                row["ID_MARCA"]);
         }
         return null;
     }
@@ -107,6 +112,7 @@ class EquipamentoModel {
         }
         return null;
     }
+    
     async excluir(id) {
         let sql = "DELETE FROM EQUIPAMENTO WHERE ID_EQUIPAMENTO = ?";
         let valores = [id];

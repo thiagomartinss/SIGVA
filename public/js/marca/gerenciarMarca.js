@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function(){
     let msgMarca = document.querySelector("#msg-marca");
     let msgMarcaAlt = document.querySelector("#msg-marcaAlt");
+    const inputDescMarca = document.querySelector("#descricaoMarca");
+    const inputDescMarcaAlt = document.querySelector("#descricaoMarcaAlt");
     //let msgMarcaEx = document.querySelector("#msg-marcaEx");
     
     const modal = document.getElementById('modalMarca')
@@ -12,6 +14,15 @@ document.addEventListener("DOMContentLoaded", function(){
         limparValidacaoAlt();
     });
 
+    inputDescMarca.addEventListener('input', function() {
+       inputDescMarca.style["border-color"] = "#ced4da"; 
+        msgMarca.innerText = ""; 
+    });
+    inputDescMarcaAlt.addEventListener('input', function() {
+       inputDescMarcaAlt.style["border-color"] = "#ced4da"; 
+        msgMarcaAlt.innerText = ""; 
+    });
+
     document.getElementById("btnCadastrar").addEventListener("click", cadastrar);
     document.getElementById("btnAlterar").addEventListener("click", alterar);
     document.getElementById("btnExcluir").addEventListener("click", excluir);
@@ -20,22 +31,11 @@ document.addEventListener("DOMContentLoaded", function(){
     
     botoesAlteracao.forEach(function(botao){
         botao.addEventListener("click", function(){
-            const marcaId = this.getAttribute("data-id");
+            let dados = this.dataset;
 
-            fetch(`/marca/buscar/${marcaId}`)
-            .then(response => response.json())
-            .then(data => {
-                if(data.ok && data.marca){
-                    document.getElementById("idMarcaAlt").value = data.marca.marcaId;
-                    document.getElementById("descricaoMarcaAlt").value = data.marca.marcaNome;
-                } else {
-                    alert(data.msg || "Erro ao buscar os dados da marca.");
-                }
-            })
-            .catch(error => {
-                console.error("Erro na requisição fetch:", error);
-                alert("Não foi possível carregar os dados para edição.");
-            });
+            document.getElementById("idMarcaAlt").value = dados.id;
+            document.getElementById("descricaoMarcaAlt").value = dados.nome;
+            limparValidacaoAlt();
         });
     });
 
@@ -146,7 +146,6 @@ document.addEventListener("DOMContentLoaded", function(){
             .then(r => r.json())
             .then(r => {
                 if(r.ok) {
-                    // Recarrega a página para mostrar a lista atualizada
                     window.location.reload();
                 } else {
                     alert(r.msg);

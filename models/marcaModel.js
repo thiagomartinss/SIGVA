@@ -43,7 +43,7 @@ class MarcaModel {
             let sql = "UPDATE MARCA SET `DESC_MARCA` = ? WHERE `ID_MARCA` = ?";
             let valores = [this.#marcaNome, this.#marcaId];
 
-            return await conexao.ExecutaComandoNonQuery(sql, valores) > 0;
+            return await conexao.ExecutaComandoNonQuery(sql, valores);
         }
     }
 

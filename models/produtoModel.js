@@ -5,6 +5,7 @@ const conexao = new Database();
 class ProdutoModel {
 
     #produtoId;
+    #produtoSku;
     #produtoNome;
     #valorVenda;
     #valorCompra;
@@ -16,6 +17,7 @@ class ProdutoModel {
     #produtoImagem;
 
     get produtoId() { return this.#produtoId; } set produtoId(produtoId) { this.#produtoId = produtoId; }
+    get produtoSku() {return this.#produtoSku;} set produtoSku(produtoSku) {this.#produtoSku = produtoSku;}
     get produtoNome() { return this.#produtoNome; } set produtoNome(produtoNome) { this.#produtoNome = produtoNome; }
     get valorVenda() { return this.#valorVenda; } set valorVenda(valorVenda) { this.#valorVenda = valorVenda; }
     get valorCompra() { return this.#valorCompra; } set valorCompra(valorCompra) { this.#valorCompra = valorCompra; }
@@ -26,8 +28,9 @@ class ProdutoModel {
     get tipoProdutoNome() { return this.#tipoProdutoNome; } set tipoProdutoNome(tipoProdutoNome) { this.#tipoProdutoNome = tipoProdutoNome; }
     get produtoImagem() { return this.#produtoImagem; } set produtoImagem(produtoImagem) { this.#produtoImagem = produtoImagem; }
 
-    constructor(produtoId, produtoNome, valorVenda, valorCompra, qtdEstoque, marcaId, tipoProdutoId, marcaNome = "", tipoProdutoNome = "", produtoImagem = "") {
+    constructor(produtoId, produtoSku, produtoNome, valorVenda, valorCompra, qtdEstoque, marcaId, tipoProdutoId, marcaNome = "", tipoProdutoNome = "", produtoImagem = "") {
         this.#produtoId = produtoId;
+        this.#produtoSku = produtoSku;
         this.#produtoNome = produtoNome;
         this.#valorVenda = valorVenda;
         this.#valorCompra = valorCompra;
@@ -39,7 +42,7 @@ class ProdutoModel {
         this.#produtoImagem = produtoImagem;
     }
     async listarProdutos() {
-        let sql = `SELECT P.ID_PRODUTO, P.DESC_PRODUTO, P.VALOR_VENDA, P.VALOR_COMPRA,P.QTD_ESTOQUE, P.MARCA_ID_MARCA, P.TIPO_PRODUTO_ID_TIPO,P.PRODUTO_IMAGEM, M.DESC_MARCA, TP.TIPO_DESCRICAO
+        let sql = `SELECT P.ID_PRODUTO, P.SKU, P.DESC_PRODUTO, P.VALOR_VENDA, P.VALOR_COMPRA,P.QTD_ESTOQUE, P.MARCA_ID_MARCA, P.TIPO_PRODUTO_ID_TIPO,P.PRODUTO_IMAGEM, M.DESC_MARCA, TP.TIPO_DESCRICAO
                FROM PRODUTO P INNER JOIN TIPO_PRODUTO TP ON P.TIPO_PRODUTO_ID_TIPO = TP.ID_TIPO
                INNER JOIN MARCA M ON P.MARCA_ID_MARCA = M.ID_MARCA
                ORDER BY P.ID_PRODUTO ASC`;
@@ -57,23 +60,42 @@ class ProdutoModel {
                 } else {
                     imagem = "produto-sem-imagem.webp";
                 }
-                listaRetorno.push(new ProdutoModel(row['ID_PRODUTO'], row['DESC_PRODUTO'], row['VALOR_VENDA'], row['VALOR_COMPRA'], row['QTD_ESTOQUE'], row['MARCA_ID_MARCA'], row['TIPO_PRODUTO_ID_TIPO'], row['DESC_MARCA'], row['TIPO_DESCRICAO'], imagem
+                listaRetorno.push(new ProdutoModel(
+                    row['ID_PRODUTO'], 
+                    row['SKU'], 
+                    row['DESC_PRODUTO'],
+                    row['VALOR_VENDA'],
+                    row['VALOR_COMPRA'],
+                    row['QTD_ESTOQUE'],
+                    row['MARCA_ID_MARCA'],
+                    row['TIPO_PRODUTO_ID_TIPO'],
+                    row['DESC_MARCA'],
+                    row['TIPO_DESCRICAO'],
+                    imagem
                 ));
             }
         }
-
         return listaRetorno;
     }
 
     async cadastrarProduto() {
         if (this.#produtoId == 0) {
-            let sql = "INSERT INTO PRODUTO (DESC_PRODUTO, VALOR_VENDA,VALOR_COMPRA, QTD_ESTOQUE, MARCA_ID_MARCA, TIPO_PRODUTO_ID_TIPO, PRODUTO_IMAGEM) VALUES (?,?,?,?,?,?,?)";
-            let valores = [this.#produtoNome, this.#valorVenda, this.#valorCompra, this.#qtdEstoque, this.#marcaId, this.#tipoProdutoId, this.#produtoImagem];
+            let sql = "INSERT INTO PRODUTO (SKU, DESC_PRODUTO, VALOR_VENDA, VALOR_COMPRA, QTD_ESTOQUE, MARCA_ID_MARCA, TIPO_PRODUTO_ID_TIPO, PRODUTO_IMAGEM) VALUES (?,?,?,?,?,?,?,?)";
+            let valores = [this.#produtoSku, this.#produtoNome, this.#valorVenda, this.#valorCompra, this.#qtdEstoque, this.#marcaId, this.#tipoProdutoId, this.#produtoImagem];
 
             return await conexao.ExecutaComandoNonQuery(sql, valores);
-        } else {
-            let sql = "UPDATE PRODUTO SET DESC_PRODUTO = ?, VALOR_VENDA = ?, VALOR_COMPRA = ?, QTD_ESTOQUE = ?, MARCA_ID_MARCA = ?, TIPO_PRODUTO_ID_TIPO = ?,PRODUTO_IMAGEM = ? WHERE ID_PRODUTO = ?";
-            let valores = [this.#produtoNome, this.#valorVenda, this.#valorCompra, this.#qtdEstoque, this.#marcaId, this.#tipoProdutoId, this.#produtoImagem, this.#produtoId];
+        } 
+        else {
+            let sql = "";
+            let valores = [];
+
+            if (this.#produtoImagem === "MANTER" || this.#produtoImagem === "") {
+                sql = "UPDATE PRODUTO SET SKU = ?, DESC_PRODUTO = ?, VALOR_VENDA = ?, VALOR_COMPRA = ?, QTD_ESTOQUE = ?, MARCA_ID_MARCA = ?, TIPO_PRODUTO_ID_TIPO = ? WHERE ID_PRODUTO = ?";
+                valores = [this.#produtoSku, this.#produtoNome, this.#valorVenda, this.#valorCompra, this.#qtdEstoque, this.#marcaId, this.#tipoProdutoId, this.#produtoId];
+            } else {
+                sql = "UPDATE PRODUTO SET SKU = ?, DESC_PRODUTO = ?, VALOR_VENDA = ?, VALOR_COMPRA = ?, QTD_ESTOQUE = ?, MARCA_ID_MARCA = ?, TIPO_PRODUTO_ID_TIPO = ?, PRODUTO_IMAGEM = ? WHERE ID_PRODUTO = ?";
+                valores = [this.#produtoSku, this.#produtoNome, this.#valorVenda, this.#valorCompra, this.#qtdEstoque, this.#marcaId, this.#tipoProdutoId, this.#produtoImagem, this.#produtoId];
+            }
 
             return await conexao.ExecutaComandoNonQuery(sql, valores);
         }
@@ -86,24 +108,24 @@ class ProdutoModel {
 
         if (rows.length > 0) {
             let row = rows[0];
-            return new ProdutoModel(row['ID_PRODUTO'], row['DESC_PRODUTO'], row['VALOR_VENDA'], row['VALOR_COMPRA'], row['QTD_ESTOQUE'], row['MARCA_ID_MARCA'], row['TIPO_PRODUTO_ID_TIPO']);
+            return new ProdutoModel(
+                row['ID_PRODUTO'], 
+                row['SKU'],
+                row['DESC_PRODUTO'], 
+                row['VALOR_VENDA'], 
+                row['VALOR_COMPRA'], 
+                row['QTD_ESTOQUE'], 
+                row['MARCA_ID_MARCA'], 
+                row['TIPO_PRODUTO_ID_TIPO'],
+                "",
+                "",
+                row['PRODUTO_IMAGEM']
+            );
         }
         return null;
     }
 
-    async buscarExistnte(nome, marca, tipo) {
-        let sql = "SELECT * FROM PRODUTO WHERE DESC_PRODUTO = ? AND MARCA_ID_MARCA = ? AND TIPO_PRODUTO_ID_TIPO = ?";
-        let valores = [nome, marca, tipo];
-        let rows = await conexao.ExecutaComando(sql, valores);
-
-        if (rows.length > 0) {//AQUI PRECISA DE TODOS OS CAMPOS ?
-            let row = rows[0];
-            return new ProdutoModel(row['ID_PRODUTO'], row['DESC_PRODUTO'], row['QTD_ESTOQUE'], row['MARCA_ID_MARCA'], row['TIPO_PRODUTO_ID_TIPO']);
-        }
-        return null;
-    }
-
-    async buscarProduto(id) {//DPS POR PRODUTO_IMAGEM AQUI
+    async buscarProduto(id) {//DPS POR PRODUTO_IMAGEM AQUI ********* por que foi criado essa funcao?
         let sql = `SELECT ID_PRODUTO, DESC_PRODUTO, VALOR_VENDA, VALOR_COMPRA, QTD_ESTOQUE, MARCA_ID_MARCA, TIPO_PRODUTO_ID_TIPO, PRODUTO_IMAGEM FROM PRODUTO WHERE ID_PRODUTO = ?`;
         let valores = [id];
         var row = await conexao.ExecutaComando(sql, valores);
@@ -132,15 +154,69 @@ class ProdutoModel {
         return await conexao.ExecutaComandoNonQuery(sql, valores) > 0;
     }
 
+    async buscarExistnte(nome, marca, tipo) {
+        let sql = "SELECT * FROM PRODUTO WHERE DESC_PRODUTO = ? AND MARCA_ID_MARCA = ? AND TIPO_PRODUTO_ID_TIPO = ?";
+        let valores = [nome, marca, tipo];
+        let rows = await conexao.ExecutaComando(sql, valores);
+
+        if (rows.length > 0) {
+            let row = rows[0];
+            return new ProdutoModel(
+                row['ID_PRODUTO'], 
+                row['SKU'],
+                row['DESC_PRODUTO'], 
+                row['VALOR_VENDA'],
+                row['VALOR_COMPRA'],
+                row['QTD_ESTOQUE'], 
+                row['MARCA_ID_MARCA'], 
+                row['TIPO_PRODUTO_ID_TIPO'],
+                row['PRODUTO_IMAGEM']
+            );
+        }
+        return null;
+    }
+
+    async buscarPorSkuEMarca(sku, marcaId) {
+        let sql = "SELECT * FROM PRODUTO WHERE SKU = ? AND MARCA_ID_MARCA = ?";
+        let valores = [sku, marcaId];
+        let rows = await conexao.ExecutaComando(sql, valores);
+
+        if (rows.length > 0) {
+            let row = rows[0];
+            return new ProdutoModel(
+                row['ID_PRODUTO'], 
+                row['SKU'],
+                row['DESC_PRODUTO'], 
+                0, 0, 0, 
+                row['MARCA_ID_MARCA'],
+                0 
+            );
+        }
+        return null;
+    }
+
+   async excluir(id) {
+        let sql = "DELETE FROM PRODUTO WHERE ID_PRODUTO = ?";
+        let valores = [id];
+        
+        let result = await conexao.ExecutaComandoNonQuery(sql, valores);
+        
+        return result;
+    }
 
     toJSON() {
         return {
-            id: this.#produtoId,
-            nome: this.#produtoNome,
-            preco: this.#valorVenda,
-            imagem: this.#produtoImagem,
-            estoque: this.#qtdEstoque
-        }
+            produtoId: this.#produtoId,
+            produtoSku: this.#produtoSku,
+            produtoNome: this.#produtoNome,
+            valorVenda: this.#valorVenda,
+            valorCompra: this.#valorCompra,
+            qtdEstoque: this.#qtdEstoque,
+            marcaId: this.#marcaId,
+            tipoProdutoId: this.#tipoProdutoId,
+            produtoImagem: this.#produtoImagem
+        };
     }
+   
 }
 module.exports = ProdutoModel;

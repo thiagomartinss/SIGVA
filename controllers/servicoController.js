@@ -9,14 +9,18 @@ class ServicoController{
     }
 
     async cadastrar(req, resp){
-        if(req.body.descricao.trim() == "" || req.body.valor.trim() == ""){
+        let { descricao, valor } = req.body;
+        descricao = descricao.trim().toUpperCase();
+        valor = valor.trim();
+
+        if(descricao == "" || valor == ""){
             resp.send({
                 ok: false,
                 msg: "Preencha os campos em vermelho"
             });
             return;
         }
-        if(parseFloat(req.body.valor.trim()) <= 0 && req.body.valor.trim() != ""){
+        if(parseFloat(valor) <= 0 && valor != ""){
             resp.send({
                 ok: false,
                 msg: "Valor deve ser maior que zero"
@@ -25,7 +29,7 @@ class ServicoController{
         }
         try{
             let servicoModel = new ServicoModel();
-            const servicoExistente = await servicoModel.buscarExistente(req.body.descricao.trim());
+            const servicoExistente = await servicoModel.buscarExistente(descricao);
 
             if(servicoExistente) {
                 resp.send({
@@ -35,7 +39,7 @@ class ServicoController{
                 return;
             }
 
-            let servico = new ServicoModel(0, req.body.descricao, req.body.valor);
+            let servico = new ServicoModel(0, descricao, valor);
             let result = await servico.cadastrarServicos();
 
             if(result){
@@ -89,9 +93,11 @@ class ServicoController{
     }
 
     async alterar(req, resp) {
-        const { id, descricao, valor } = req.body;
+        let { id, descricao, valor } = req.body;
+        descricao = descricao.trim().toUpperCase();
+        valor = valor.trim();
 
-        if (!id || !descricao || descricao.trim() === "" || !valor || valor.trim() === "") {
+        if (!id || !descricao || descricao === "" || !valor || valor === "") {
             resp.send({
                 ok: false,
                 msg: "Preencha todos os campos para alterar!"
@@ -99,7 +105,7 @@ class ServicoController{
             return;
         }
 
-        if(parseFloat(valor.trim()) <= 0){
+        if(parseFloat(valor) <= 0){
             resp.send({
                 ok: false,
                 msg: "Valor deve ser maior que zero"
@@ -108,7 +114,7 @@ class ServicoController{
         }
         try{
             let servicoModel = new ServicoModel();
-            const servicoExistente = await servicoModel.buscarExistente(descricao.trim());
+            const servicoExistente = await servicoModel.buscarExistente(descricao);
 
             if(servicoExistente && servicoExistente.servicoId != id) {
                 resp.send({
@@ -118,7 +124,7 @@ class ServicoController{
                 return;
             }
 
-            let servico = new ServicoModel(id, descricao.trim(), valor.trim());
+            let servico = new ServicoModel(id, descricao, valor);
             let result = await servico.cadastrarServicos();
 
             if(result){

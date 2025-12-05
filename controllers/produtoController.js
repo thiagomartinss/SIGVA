@@ -23,7 +23,7 @@ class ProdutoController{
     }
 
     async cadastrar(req, res){
-        const {
+        let {
             sku,
             nome,
             vlVenda,
@@ -32,6 +32,9 @@ class ProdutoController{
             marcaId,
             tipoId
         } = req.body;
+
+        sku = sku.trim().toUpperCase();
+        nome = nome.trim().toUpperCase();
 
         if (!sku || sku.trim() === "" || !nome || nome.trim() === "" || !vlVenda || vlVenda.trim() === "" || !vlCompra || vlCompra.trim() === "" || !qtdEstoque || qtdEstoque.trim() === "" || !marcaId || marcaId.trim() === "" || !tipoId || tipoId.trim() === ""){
             res.send({
@@ -134,7 +137,7 @@ class ProdutoController{
     }
 
     async alterar(req, res) {
-        const {
+        let {
             id,
             skuAlt,
             nomeAlt,
@@ -145,6 +148,9 @@ class ProdutoController{
             tipoIdAlt
         } = req.body;
 
+        skuAlt = skuAlt.trim().toUpperCase();
+        nomeAlt = nomeAlt.trim().toUpperCase();
+        
         if (!skuAlt || skuAlt.trim() === "" || !nomeAlt || nomeAlt.trim() === "" || !vlVendaAlt || vlVendaAlt.trim() === "" || !vlCompraAlt || vlCompraAlt.trim() === "" || !qtdEstoqueAlt || qtdEstoqueAlt.trim() === "" || !marcaIdAlt || marcaIdAlt.trim() === "" || !tipoIdAlt || tipoIdAlt.trim() === "") {
             res.send({
                 ok: false,

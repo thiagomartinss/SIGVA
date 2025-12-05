@@ -15,9 +15,11 @@ class EquipamentoController{
 
     async cadastrar(req, resp){
 
-        const { descricao, modelo, estoque, marcaId } = req.body;
+        let { descricao, modelo, estoque, marcaId } = req.body;
+        descricao = descricao.trim().toUpperCase();
+        modelo = modelo.trim().toUpperCase();
 
-        if (!descricao || descricao.trim() === "" || !modelo || modelo.trim() === "" || !estoque || estoque.trim() === "" || !marcaId || marcaId === "") {
+        if (!descricao || descricao === "" || !modelo || modelo === "" || !estoque || estoque.trim() === "" || !marcaId || marcaId === "") {
             resp.send({
                 ok: false,
                 msg: "Preencha todos os campos em vermelho!"
@@ -35,7 +37,7 @@ class EquipamentoController{
 
         try {
             let equipamento = new EquipamentoModel();
-            const equipamentoExistente = await equipamento.buscarExistente(descricao.trim(), modelo.trim(), marcaId);
+            const equipamentoExistente = await equipamento.buscarExistente(descricao, modelo, marcaId);
 
             if (equipamentoExistente) {
                 resp.send({
@@ -45,7 +47,7 @@ class EquipamentoController{
                 return;
             }
 
-            equipamento = new EquipamentoModel(0, descricao.trim(), modelo.trim(), estoque.trim(), marcaId);
+            equipamento = new EquipamentoModel(0, descricao, modelo, estoque.trim(), marcaId);
             let result = await equipamento.cadastrarEquipamento();
 
             if(result){
@@ -103,9 +105,11 @@ class EquipamentoController{
 
     async alterar(req, resp) {
     
-        const { id, descricao, modelo, estoque, marcaId } = req.body;
+        let { id, descricao, modelo, estoque, marcaId } = req.body;
+        descricao = descricao.trim().toUpperCase();
+        modelo = modelo.trim().toUpperCase();
 
-        if (!id || !descricao || descricao.trim() === "" || !modelo || modelo.trim() === "" || !estoque || estoque.trim() === "" || !marcaId || marcaId === "") {
+        if (!id || !descricao || descricao === "" || !modelo || modelo === "" || !estoque || estoque.trim() === "" || !marcaId || marcaId === "") {
             resp.send({
                 ok: false,
                 msg: "Preencha todos os campos!"
@@ -123,7 +127,7 @@ class EquipamentoController{
 
         try {
             let equipamento = new EquipamentoModel();
-            const equipamentoExistente = await equipamento.buscarExistente(descricao.trim(), modelo.trim(), marcaId);
+            const equipamentoExistente = await equipamento.buscarExistente(descricao, modelo, marcaId);
 
             if (equipamentoExistente && equipamentoExistente.equipamentoId != id) {
                 resp.send({
@@ -133,7 +137,7 @@ class EquipamentoController{
                 return;
             }
             
-            equipamento = new EquipamentoModel(id, descricao.trim(), modelo.trim(), estoque.trim(), marcaId);
+            equipamento = new EquipamentoModel(id, descricao, modelo, estoque.trim(), marcaId);
             let result = await equipamento.cadastrarEquipamento();
 
             if(result){

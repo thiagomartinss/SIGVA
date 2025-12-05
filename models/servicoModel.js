@@ -46,7 +46,7 @@ class ServicoModel {
             let sql = "UPDATE SERVICO SET `DESC_SERVICO` = ?, `VALOR_SERVICO` = ? WHERE `ID_SERVICO` = ?";
             let valores = [this.#servicoDesc, this.#servicoValor, this.#servicoId];
 
-            return await conexao.ExecutaComandoNonQuery(sql, valores) > 0;
+            return await conexao.ExecutaComandoNonQuery(sql, valores);
         }
     }
 

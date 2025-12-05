@@ -17,7 +17,7 @@ class MarcaController{
             return;
         }
         try {
-            let marca = new MarcaModel(0, req.body.descricao);
+            let marca = new MarcaModel(0, req.body.descricao.toUpperCase());
             let result = await marca.cadastrarMarcas(); 
 
             if (result) {

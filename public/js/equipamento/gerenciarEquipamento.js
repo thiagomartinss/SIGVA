@@ -16,6 +16,38 @@ document.addEventListener("DOMContentLoaded", function(){
     document.getElementById("btnAlterar").addEventListener("click", alterar);
     document.getElementById("btnConfirmarExclusao").addEventListener("click", excluir);
 
+    const inputs = document.querySelectorAll(".form-control, .form-select");
+
+    inputs.forEach(campo => {
+        campo.addEventListener("input", function() {
+            this.style.borderColor = "#ced4da";
+
+            let isAlteracao = this.id.includes("Alt");
+            
+            let grupoInputs = [];
+            let msgAlvo = null;
+
+            if (isAlteracao) {
+                grupoInputs = document.querySelectorAll("[id$='Alt']"); 
+                msgAlvo = msgEquipamentoAlt;
+            } else {
+                grupoInputs = document.querySelectorAll("#descricaoEquipamento, #modeloEquipamento, #qtdEquipamento, #marcaEquipamento");
+                msgAlvo = msgEquipamento;
+            }
+
+            let temErro = false;
+            grupoInputs.forEach(c => {
+                if (c.style.borderColor === "red") {
+                    temErro = true;
+                }
+            });
+
+            if (!temErro) {
+                msgAlvo.textContent = "";
+            }
+        });
+    });
+
     const botoesAlteracao = document.querySelectorAll(".btnAlteracao");
 
     botoesAlteracao.forEach(function(botao){

@@ -24,6 +24,15 @@ class EquipamentoController{
             });
             return;
         }
+
+        if (parseInt(estoque) < 0) {
+            resp.send({
+                ok: false,
+                msg: "A quantidade em estoque deve ser maior que zero!"
+            });
+            return;
+        }
+
         try {
             let equipamento = new EquipamentoModel();
             const equipamentoExistente = await equipamento.buscarExistente(descricao.trim(), modelo.trim(), marcaId);
@@ -100,6 +109,14 @@ class EquipamentoController{
             resp.send({
                 ok: false,
                 msg: "Preencha todos os campos!"
+            });
+            return;
+        }
+
+        if (parseInt(estoque) < 0) {
+            resp.send({
+                ok: false,
+                msg: "A quantidade em estoque deve ser maior que zero!"
             });
             return;
         }

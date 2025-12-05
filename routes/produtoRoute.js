@@ -18,9 +18,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 router.get("/", produtoController.produtoView);
 router.post("/cadastrar", upload.single("imagem"), produtoController.cadastrar);
-//router.get("/buscar/:id", produtoController.buscar);
-router.get("/obter/:id", produtoController.obterProduto);
-//router.post("/alterar",upload.single("imagem"), produtoController.alterar);
-//router.post("/excluir", produtoController.excluir);
+router.get("/buscar/:id", produtoController.obterProduto);
+//router.get("/obter/:id", produtoController.obterProduto); *** rota fora do padrão é buscar e nao obter
+router.post("/alterar",upload.single("imagem"), produtoController.alterar);
+router.post("/excluir", produtoController.excluir);
 
 module.exports = router;

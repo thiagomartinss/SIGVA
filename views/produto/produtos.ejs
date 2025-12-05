@@ -43,6 +43,7 @@
                     <tr>
                         <th>Imagem</th>
                         <th>Código</th>
+                        <th>SKU</th>
                         <th>Nome</th>
                         <th>Marca</th>
                         <th>Tipo</th>
@@ -54,41 +55,41 @@
                 <tbody>
                     <% listaProdutos.map(function(value, index) { %>
                         <tr>
+                            <td><img width="100" src="/img/produtos/<%= value.produtoImagem%>"></td>
+                            <td><%= value.produtoId %></td>
+                            <td><%= value.produtoSku %></td>
+                            <td><%= value.produtoNome %></td>
+                            <td><%= value.marcaNome %></td>
+                            <td><%= value.tipoProdutoNome %></td>
+                            <td><%= value.qtdEstoque %></td>
+                            <td><%= value.valorVenda %></td>
                             <td>
-                                <img width="100" src="/img/produtos/<%= value.produtoImagem%>">
-                            </td>
-                            <td>
-                                <%= value.produtoId %>
-                            </td>
-                            <td>
-                                <%= value.produtoNome %>
-                            </td>
-                            <td>
-                                <%= value.marcaNome %>
-                            </td>
-                            <td>
-                                <%= value.tipoProdutoNome %>
-                            </td>
-                            <td>
-                                <%= value.qtdEstoque %>
-                            </td>
-                            <td>
-                                <%= value.valorVenda %>
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-primary btnAlteracao" data-bs-toggle="modal"
-                                    data-bs-target="#modalProdutoAlt" data-id="<%= value.produtoId %>"
-                                    data-nome="<%= value.produtoNome %>" data-marca-id="<%= value.marcaId %>"><i
-                                        class="fas fa-pen"></i></a>
-
-                                <button class="btn btn-danger btnExclusao" data-bs-toggle="modal"
-                                    data-bs-target="#modalProdutoDel" data-id="<%= value.produtoId %>"
-                                    data-nome="<%= value.produtoNome %>" data-modelo="<%= value.produtoModelo %>"
-                                    data-marca="<%= value.marcaNome %>" data-estoque="<%= value.produtoEstoque %>"><i
-                                        class="fas fa-trash"></i></button>
+                                <a href="#" class="btn btn-primary btnAlteracao" data-bs-toggle="modal" data-bs-target="#modalProdutoAlt" 
+                                    data-id="<%= value.produtoId %>"
+                                    data-sku="<%= value.produtoSku %>"
+                                    data-nome="<%= value.produtoNome %>" 
+                                    data-marca-id="<%= value.marcaId %>"
+                                    data-tipo="<%= value.tipoProdutoId %>"
+                                    data-estoque="<%= value.qtdEstoque %>"
+                                    data-venda="<%= value.valorVenda %>"
+                                    data-compra="<%= value.valorCompra %>">
+                                        <i class="fas fa-pen"></i>
+                                </a>
+                                <button class="btn btn-danger btnExclusao" data-bs-toggle="modal" data-bs-target="#modalProdutoDel" 
+                                    data-id="<%= value.produtoId %>"
+                                    data-sku="<%= value.produtoSku %>"
+                                    data-nome="<%= value.produtoNome %>" 
+                                    data-marca="<%= value.marcaNome %>"        
+                                    data-tipo="<%= value.tipoProdutoNome %>"   
+                                    data-estoque="<%= value.qtdEstoque %>"
+                                    data-venda="<%= value.valorVenda %>"
+                                    data-compra="<%= value.valorCompra %>"
+                                    data-imagem="<%= value.produtoImagem %>">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </td>
                         </tr>
-                        <% }) %>
+                    <% }) %>
                 </tbody>
             </table>
         </div>
@@ -114,6 +115,10 @@
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="nomeProduto" placeholder="Nome do Produto">
                             <label for="nomeProduto">Nome do Produto</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control text-uppercase" id="sku" placeholder="SKU">
+                            <label for="sku">SKU</label>
                         </div>
                         <div class="form-floating mb-3">
                             <select class="form-select" id="marcaProduto">
@@ -142,8 +147,9 @@
                         </div>
                         <div class="mb-3">
                             <label for="produtoImagem" class="form-label">Imagem do Produto</label><br>
-                            <input lass="form-control" type="file" id="inputImagem" name="imagem">
+                            <input class="form-control" type="file" id="inputImagem" name="imagem">
                         </div>
+                        <span class="text-danger" id="msg-imagem"></span><br>
                         <div class="mb-3" id="divPrevia" style="display:none;">
                             <label class="form-label">Prévia da Imagem</label> <br>
                             <div>
@@ -155,6 +161,109 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-success bg-green200" id="btnCadastrar">Cadastrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalProdutoAlt">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Produtos</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="idProdutoAlt">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="tipoProdutoAlt">
+                                <option value="" selected disabled>Selecione o tipo do produto</option>
+                                <% listaTipo.map(function(tipo) { %>
+                                    <option value="<%= tipo.tipoProdutoId %>">
+                                        <%= tipo.tipoProdutoNome %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                            <label for="tipoProdutoAlt">Tipo do Produto</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="nomeProdutoAlt" placeholder="Nome do Produto">
+                            <label for="nomeProdutoAlt">Nome do Produto</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control text-uppercase" id="skuAlt" placeholder="SKU">
+                            <label for="skuAlt">SKU</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="marcaProdutoAlt">
+                                <option value="" selected disabled>Selecione uma marca</option>
+                                <% listaMarcas.map(function(marca) { %>
+                                    <option value="<%= marca.marcaId %>">
+                                        <%= marca.marcaNome %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                            <label for="marcaProdutoAlt">Marca</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="vlCompraProdutoAlt"
+                                placeholder="Valor de Compra">
+                            <label for="vlCompraProdutoAlt">Valor de Compra</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="vlVendaProdutoAlt" placeholder="Valor de Venda">
+                            <label for="vlVendaProdutoAlt">Valor de Venda</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="qtdProdutoAlt"
+                                placeholder="Quantidade em estoque">
+                            <label for="qtdProdutoAlt">Quantidade em estoque</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="produtoImagemAlt" class="form-label">Imagem do Produto</label><br>
+                            <input class="form-control" type="file" id="inputImagemAlt" name="imagem">
+                        </div>
+                        <div class="mb-3" id="divPreviaAlt" style="display:none;">
+                            <label class="form-label">Prévia da Imagem cadastrada</label> <br>
+                            <div>
+                                <img width="250" id="previaImagemAlt">
+                            </div>
+                        </div>
+                        <span class="text-danger" id="msg-produtoAlt"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success bg-green200" id="btnAlterar">Salvar Alterações</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalProdutoDel">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirmar a exclusão do produto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div> 
+                    <div class="modal-body">
+                        <p>Você tem certeza que deseja excluir o produto abaixo?</p>
+                        <p><strong>Código:</strong> <span id="codigoExclusao"></span></p>
+                        <p><strong>SKU:</strong> <span id="skuExclusao"></span></p>
+                        <p><strong>Nome:</strong> <span id="nomeExclusao"></span></p>
+                        <p><strong>Marca:</strong> <span id="marcaExclusao"></span></p> 
+                        <p><strong>Tipo:</strong> <span id="tipoExclusao"></span></p>
+                        <p><strong>Estoque:</strong> <span id="qtdExclusao"></span></p>
+                        <p><strong>Valor Venda:</strong> <span id="vlVendaExclusao"></span></p>
+                        <p><strong>Valor Compra:</strong> <span id="vlCompraExclusao"></span></p>
+                        <div class="text-center mt-3" id="divPreviaDel" style="display: none;">
+                            <p><strong>Imagem:</strong></p>
+                            <img src="" id="imgPreviaDel" width="150" class="img-thumbnail">
+                        </div>
+                        <input type="hidden" id="idProdutoExcluir" value="">
+                        <span class="text-danger" id="msg-produtoExc"></span>
+                    </div> 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="btnExclusao">Excluir</button>
                     </div>
                 </div>
             </div>

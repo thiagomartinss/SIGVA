@@ -117,19 +117,34 @@ class MarcaController{
 
     async excluir(req, resp) {
         if(req.body.id != null){
-            let marca = new MarcaModel();
-            let result = await marca.excluir(req.body.id);
+            try {
+                let marca = new MarcaModel();
+                let result = await marca.excluir(req.body.id);
 
-            if(result){
-                resp.send({
-                    ok: true,
-                    msg: "Marca excluída com sucesso!"
-                });
-            } else {
-                resp.send({
-                    ok: false,
-                    msg: "Erro ao excluir a marca!"
-                });
+                if(result){
+                    resp.send({
+                        ok: true,
+                        msg: "Marca excluída com sucesso!"
+                    });
+                } else {
+                    resp.send({
+                        ok: false,
+                        msg: "Erro ao excluir a marca (Marca não encontrada)!"
+                    });
+                }
+            } catch (error) {
+                if (error.code === 'ER_ROW_IS_REFERENCED_2' || error.errno === 1451) {
+                    resp.send({
+                        ok: false,
+                        msg: "Não é possível excluir esta marca pois ela está vinculada a produtos ou equipamentos!"
+                    });
+                } else {
+                    console.error("Erro ao excluir marca:", error);
+                    resp.send({
+                        ok: false,
+                        msg: "Erro inesperado ao excluir a marca."
+                    });
+                }
             }
         } else {
             resp.send({

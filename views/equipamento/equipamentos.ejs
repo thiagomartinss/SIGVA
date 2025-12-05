@@ -56,7 +56,11 @@
                             <td><%= value.marcaNome %></td>
                             <td><%= value.equipamentoEstoque %></td>
                             <td>
-                                <a href="#" class="btn btn-primary btnAlteracao" data-bs-toggle="modal" data-bs-target="#modalEquipamentoAlt" data-id="<%= value.equipamentoId %>"       data-nome="<%= value.equipamentoNome %>" data-marca-id="<%= value.marcaId %>"><i class="fas fa-pen"></i></a>
+                                <a href="#" class="btn btn-primary btnAlteracao" data-bs-toggle="modal" data-bs-target="#modalEquipamentoAlt" 
+                                    data-id="<%= value.equipamentoId %>"       
+                                    data-nome="<%= value.equipamentoNome %>" 
+                                    data-marca-id="<%= value.marcaId %>">
+                                <i class="fas fa-pen"></i></a>
                                 <button class="btn btn-danger btnExclusao" data-bs-toggle="modal" data-bs-target="#modalEquipamentoDel" data-id="<%= value.equipamentoId %>" data-nome="<%= value.equipamentoNome %>" data-modelo="<%= value.equipamentoModelo %>" data-marca="<%= value.marcaNome %>" data-estoque="<%= value.equipamentoEstoque %>"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>

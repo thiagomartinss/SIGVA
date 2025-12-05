@@ -15,6 +15,7 @@ const routeProduto = require("./routes/produtoRoute");
 const routeEquipamento = require("./routes/equipamentoRoute");
 const routeOrdemServico = require("./routes/ordemServicoRoute");
 const routerPessoa = require("./routes/pessoaRoute");
+const routerFuncionario = require("./routes/funcionarioRoute");
 const routerEcommerce = require("./routes/ecommerceRoute");
 const routerEcommerceServ=require("./routes/ecommerceServiceRoute");
 const path = require("path");
@@ -48,6 +49,7 @@ server.use("/equipamento", routeEquipamento);
 server.use("/produto", routeProduto);
 server.use("/ordemServico", routeOrdemServico);
 server.use("/pessoa", routerPessoa);
+server.use("/funcionario", routerFuncionario);
 server.use("/ecommerce", routerEcommerce);
 server.use("/ecommerceService",routerEcommerceServ);
 

@@ -81,9 +81,10 @@
     }
 
     .btn-semear:hover {
-        background-color: #1f6b25;
+        background-color: #fff;
         border-color: #1f6b25;
-        color: #fff;
+        color: #1f6b25;
+        font-size: 16px;
     }
 
     #carrinhoLaterl {

@@ -147,6 +147,12 @@ class ProdutoModel {
         }
         return null
     }
+    async atualizarEstoque(id, novaQuantidade) {
+        let sql = "update tb_produto set prd_quantidade = ? where prd_id = ?";
+        let valores = [novaQuantidade, id];
+
+        return await conexao.ExecutaComandoNonQuery(sql, valores) > 0;
+    }
 
     async buscarExistnte(nome, marca, tipo) {
         let sql = "SELECT * FROM PRODUTO WHERE DESC_PRODUTO = ? AND MARCA_ID_MARCA = ? AND TIPO_PRODUTO_ID_TIPO = ?";

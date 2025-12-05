@@ -1,11 +1,12 @@
-const express=require("express");
-const PessoaController=require("../controllers/pessoaController");
-const router=express.Router();
-const pessoaController= new PessoaController();
+const express = require("express");
+const PessoaController = require("../controllers/pessoaController");
+const router = express.Router();
+const pessoaController = new PessoaController();
 
-router.get("/",pessoaController.pessoaView);
+router.get("/", pessoaController.pessoaView);
 router.post("/cadastrar", pessoaController.cadastrar);
 router.get("/buscar/:id", pessoaController.buscar);
+router.get("/buscarPorNome/:nome", pessoaController.buscarPorNome);
 router.post("/alterar", pessoaController.alterar);
 router.post("/excluir", pessoaController.excluir);
 

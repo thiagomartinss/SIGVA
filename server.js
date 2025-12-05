@@ -16,6 +16,7 @@ const routeEquipamento = require("./routes/equipamentoRoute");
 const routeOrdemServico = require("./routes/ordemServicoRoute");
 const routerPessoa = require("./routes/pessoaRoute");
 const routerEcommerce = require("./routes/ecommerceRoute");
+const routerEcommerceServ=require("./routes/ecommerceServiceRoute");
 const path = require("path");
 
 /*
@@ -48,6 +49,7 @@ server.use("/produto", routeProduto);
 server.use("/ordemServico", routeOrdemServico);
 server.use("/pessoa", routerPessoa);
 server.use("/ecommerce", routerEcommerce);
+server.use("/ecommerceService",routerEcommerceServ);
 
 global.CAMINHO_IMG = "/img/produtos/";
 global.CAMINHO_IMG_ABS = __dirname + "/public/img/produtos/";

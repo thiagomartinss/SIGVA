@@ -277,6 +277,7 @@ class ProdutoController{
             res.send({ ok: false, msg: "Erro inesperado ao excluir o produto." });
         }
     }
+    
 }
 
 module.exports = ProdutoController;

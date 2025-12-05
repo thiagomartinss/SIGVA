@@ -2,20 +2,20 @@ const Database = require('../db/database');
 
 const conexao = new Database();
 
-class PessoaModel{
+class PessoaModel {
     #pessoaId;
     #email;
     #telefone;
     #ehCliente;
     #ehFornecedor;
     #idEndereco;
-    
+
     get pessoaId() { return this.#pessoaId; } set pessoaId(pessoaId) { this.#pessoaId = pessoaId; }
     get email() { return this.#email; } set email(email) { this.#email = email; }
     get telefone() { return this.#telefone; } set telefone(telefone) { this.#telefone = telefone; }
     get ehCliente() { return this.#ehCliente; } set ehCliente(ehCliente) { this.#ehCliente = ehCliente; }
     get ehFornecedor() { return this.#ehFornecedor; } set ehFornecedor(ehFornecedor) { this.#ehFornecedor = ehFornecedor; }
-    get idEndereco() {return this.#idEndereco;} set idEndereco(idEndereco) {this.#idEndereco = idEndereco;}
+    get idEndereco() { return this.#idEndereco; } set idEndereco(idEndereco) { this.#idEndereco = idEndereco; }
 
     constructor(pessoaId, email, telefone, ehCliente, ehFornecedor, idEndereco) {
         this.#pessoaId = pessoaId;
@@ -26,7 +26,7 @@ class PessoaModel{
         this.#idEndereco = idEndereco;
     }
 
-    async listarPessoa(){
+    async listarPessoa() {
         let sql = `
             SELECT 
                 p.ID_PESSOA,
@@ -45,13 +45,13 @@ class PessoaModel{
             LEFT JOIN PESSOA_JURIDICA pj ON p.ID_PESSOA = pj.ID_PESSOAJURIDICA
             ORDER BY p.ID_PESSOA ASC
         `;
-        
+
         let rows = await conexao.ExecutaComando(sql);
-        
+
         let listaRetorno = [];
 
-        if(rows.length > 0){
-            for(let i=0; i < rows.length; i++){
+        if (rows.length > 0) {
+            for (let i = 0; i < rows.length; i++) {
                 let row = rows[i];
                 listaRetorno.push({
                     pessoaId: row['ID_PESSOA'],
@@ -59,7 +59,7 @@ class PessoaModel{
                     telefone: this.telefoneMask(row['TELEFONE']),
                     ehCliente: row['EH_CLIENTE'],
                     ehFornecedor: row['EH_FORNECEDOR'],
-                    nome: row['NOME_COMPLETO'], 
+                    nome: row['NOME_COMPLETO'],
                     documento: this.docmask(row['DOCUMENTO']),
                     tipo: row['TIPO']
                 });
@@ -70,18 +70,18 @@ class PessoaModel{
 
     async cadastrar(connection = null) {
         let sql = "INSERT INTO PESSOA (EMAIL, TELEFONE, EH_CLIENTE, EH_FORNECEDOR, ENDERECO_ID_ENDERECO) VALUES (?, ?, ?, ?, ?)";
-        
+
         let valores = [
-            this.#email, 
-            this.#telefone, 
-            this.#ehCliente ? 1 : 0,     
+            this.#email,
+            this.#telefone,
+            this.#ehCliente ? 1 : 0,
             this.#ehFornecedor ? 1 : 0,
             this.#idEndereco
         ];
 
         let result = await conexao.ExecutaComandoNonQuery(sql, valores, connection);
-        
-        return result.insertId; 
+
+        return result.insertId;
     }
 
     async buscarPorId(id) {
@@ -100,13 +100,13 @@ class PessoaModel{
             WHERE p.ID_PESSOA = ?
         `;
         let rows = await conexao.ExecutaComando(sql, [id]);
-        
-        if(rows.length > 0) {
+
+        if (rows.length > 0) {
             let row = rows[0];
-            
+
             return {
                 pessoaId: row['ID_PESSOA'],
-                idEndereco: row['ENDERECO_ID_ENDERECO'], 
+                idEndereco: row['ENDERECO_ID_ENDERECO'],
                 email: row['EMAIL'],
                 telefone: row['TELEFONE'],
                 ehCliente: row['EH_CLIENTE'],
@@ -141,31 +141,49 @@ class PessoaModel{
     }
 
     //formatando cnpj, cpf e telefone direto no backend
-     docmask(valor) {
-        if (!valor) 
+    docmask(valor) {
+        if (!valor)
             return "";
         valor = valor.replace(/\D/g, "");
 
-        if (valor.length === 11) 
+        if (valor.length === 11)
             return valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-        else if (valor.length === 14) 
+        else if (valor.length === 14)
             return valor.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
-        
+
         return valor;
     }
 
     telefoneMask(valor) {
-        if (!valor) 
+        if (!valor)
             return "";
         valor = valor.replace(/\D/g, "");
 
-        if (valor.length === 11) 
+        if (valor.length === 11)
             return valor.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
-    
-        else if (valor.length === 10) 
+
+        else if (valor.length === 10)
             return valor.replace(/^(\d{2})(\d{4})(\d{4}).*/, "($1) $2-$3");
         return valor;
     }
+    async listarClientesPorNome(nome) {
+        let sql = ` 
+        SELECT P.ID_PESSOA, PF.NOME, E.LOGRADOURO,
+            E.NUMERO, E.BAIRRO, E.CEP, C.NOME_CID
+            FROM PESSOA P
+            INNER JOIN PESSOA_FISICA PF
+                ON PF.ID_PESSOAFISICA = P.ID_PESSOA
+            INNER JOIN ENDERECO E
+                ON P.ENDERECO_ID_ENDERECO = E.ID_ENDERECO
+            INNER JOIN CIDADE C
+                ON E.ID_CIDADE = C.ID_CIDADE
+            WHERE PF.NOME LIKE ?`;
+        let valores = [`%${nome}%`];
+
+        return await conexao.ExecutaComando(sql, valores);
+
+    }
+
 }
 
 module.exports = PessoaModel;

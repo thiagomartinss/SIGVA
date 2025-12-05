@@ -4,8 +4,8 @@ const PessoaModel = require("../models/pessoaModel");
 const PessoaFisicaModel = require("../models/pessoaFisicaModel");
 const PessoaJuridicaModel = require("../models/pessoaJuridicaModel");
 
-class PessoaController{
-    async pessoaView(req,res){
+class PessoaController {
+    async pessoaView(req, res) {
         let uf = new EnderecoModel();
         const listaUf = await uf.listarUf();
 
@@ -44,7 +44,7 @@ class PessoaController{
         }
     }
 
-    async cadastrar(req, res){
+    async cadastrar(req, res) {
         let {
             tipoPessoa, email, telefone, cep, logradouro, numero, bairro, cidadeId, ufId,
             ehCliente, ehFornecedor,
@@ -52,8 +52,7 @@ class PessoaController{
             cnpj, razaoSocial, nomeFantasia
         } = req.body;
 
-        if (!email || email.trim() === "" || !telefone || telefone.trim() === "" || !cep || cep.trim() === "" || !logradouro || logradouro.trim() === "" || !numero || numero.trim() === "" || !bairro || bairro.trim() === "" || !cidadeId || cidadeId === "" || !ufId || ufId === "") 
-        {
+        if (!email || email.trim() === "" || !telefone || telefone.trim() === "" || !cep || cep.trim() === "" || !logradouro || logradouro.trim() === "" || !numero || numero.trim() === "" || !bairro || bairro.trim() === "" || !cidadeId || cidadeId === "" || !ufId || ufId === "") {
             res.send({ ok: false, msg: "Preencha todos os campos obrigatórios (Endereço e Contato)!" });
             return;
         }
@@ -73,7 +72,7 @@ class PessoaController{
                 res.send({ ok: false, msg: "Preencha todos os dados da Pessoa Jurídica!" });
                 return;
             }
-        } 
+        }
         else {
             res.send({ ok: false, msg: "Tipo de pessoa inválido!" });
             return;
@@ -83,18 +82,18 @@ class PessoaController{
         let connection;
 
         try {
-            
+
             connection = await db.beginTransaction();
 
-            
-            let endereco = new EnderecoModel(cep, logradouro, numero, bairro, cidadeId, null, null, ufId);
-            let idEndereco = await endereco.cadastrar(connection); 
 
-           
+            let endereco = new EnderecoModel(cep, logradouro, numero, bairro, cidadeId, null, null, ufId);
+            let idEndereco = await endereco.cadastrar(connection);
+
+
             let pessoa = new PessoaModel(0, email, telefone, ehCliente, ehFornecedor, idEndereco);
             let idPessoa = await pessoa.cadastrar(connection);
 
-            
+
             let result = false;
             if (tipoPessoa === 'PF') {
                 let pf = new PessoaFisicaModel(idPessoa, nome, cpf, dataNascimento);
@@ -112,7 +111,7 @@ class PessoaController{
             if (connection) await db.rollback(connection);
 
             console.error(error);
-            
+
             if (error.code === 'ER_DUP_ENTRY') {
                 res.send({ ok: false, msg: "Já existe um cadastro com este CPF, CNPJ ou E-mail." });
             } else {
@@ -146,7 +145,7 @@ class PessoaController{
             let pessoaModel = new PessoaModel();
             let pessoaAtual = await pessoaModel.buscarPorId(id);
 
-            if (!pessoaAtual) 
+            if (!pessoaAtual)
                 throw new Error("Pessoa não encontrada para alteração.");
 
             let idEndereco = pessoaAtual.idEndereco;
@@ -216,6 +215,15 @@ class PessoaController{
             res.send({ ok: false, msg: "Erro ao excluir: " + error.message });
         }
     }
+    async buscarPorNome(req, res) {
+        let nome = req.params.nome;
+
+        let pessoa = new PessoaModel();
+        let lista = await pessoa.listarClientesPorNome(nome);
+
+        res.json({ pessoas: lista });
+    }
+
 }
 
 module.exports = PessoaController;

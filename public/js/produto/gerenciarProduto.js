@@ -53,14 +53,14 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 if(data.ok && data.produto) {
                     console.log(data.produto);
-                    document.getElementById("idProdutoAlt").value = data.produto.produtoId;
-                    document.getElementById("tipoProdutoAlt").value = data.produto.tipoProdutoId;
-                    document.getElementById("skuAlt").value = data.produto.produtoSku;
-                    document.getElementById("nomeProdutoAlt").value = data.produto.produtoNome;
-                    document.getElementById("marcaProdutoAlt").value = data.produto.marcaId;
-                    document.getElementById("vlCompraProdutoAlt").value = data.produto.valorCompra;
-                    document.getElementById("vlVendaProdutoAlt").value = data.produto.valorVenda;
-                    document.getElementById("qtdProdutoAlt").value = data.produto.qtdEstoque;
+                    document.getElementById("idProdutoAlt").value = data.produto.id; 
+                    document.getElementById("tipoProdutoAlt").value = data.produto.tipoProdutoId; 
+                    document.getElementById("skuAlt").value = data.produto.sku; 
+                    document.getElementById("nomeProdutoAlt").value = data.produto.nome; 
+                    document.getElementById("marcaProdutoAlt").value = data.produto.marcaId; 
+                    document.getElementById("vlCompraProdutoAlt").value = data.produto.valorCompra; 
+                    document.getElementById("vlVendaProdutoAlt").value = data.produto.preco;
+                    document.getElementById("qtdProdutoAlt").value = data.produto.estoque;
 
                     let divPreviaAlt = document.getElementById("divPreviaAlt");
                     let imgPreviaAlt = document.getElementById("previaImagemAlt");

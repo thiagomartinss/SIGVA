@@ -1,6 +1,4 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-<script src="/js/EcommerceService/ecommerceService.js"></script>
-<link rel="stylesheet" href="/css/style.css">
+
 <section>
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
@@ -10,23 +8,27 @@
                         <div class="card-body p-6 d-flex flex-column h-100">
 
                             <div class="text-center">
-                                <div class="d-flex justify-content-center small mb-2">
+                                <!-- <div class="d-flex justify-content-center small mb-2">
+                                    Drone
+                                </div> -->
+
+                                <div class="d-flex justify-content-center small mb-2 mt-4">
                                     <h5 class="fw-bolder">
                                         <%= value.servicoDesc %>
                                     </h5>
                                 </div>
 
-                                <div class="text-center mt-auto">
+                                <div class="text-center mt-4">
                                     R$ <%= value.servicoValor %>
                                 </div>
                             </div>
                             <div class="mt-auto">
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent mt-3
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent mt-5
                                 ">
                                     <div class="text-center">
                                         <button data-produto="<%= value.servicoId %>" class="btn btn-semear Orcamento"
                                             onclick="abrirModalOrcamento('<%= value.servicoId %>', '<%= value.servicoDesc %>', '<%=value.servicoValor%>')">
-                                            <i class="bi bi-clipboard-data"></i> Fazer Orçamento
+                                            <i class="bi bi-clipboard-data"></i> Fazer um Orçamento
                                         </button>
                                     </div>
                                 </div>
@@ -61,7 +63,7 @@
 
                 <div class="form-floating mb-3">
                     <input type="email" class="form-control" id="orc_email" placeholder="Seu e-mail">
-                    <label for="orc_email">Seu e-mail</label>
+                    <label for="orc_email">Seu E-mail</label>
 
                     <div id="msg-emailAlt" class="text-danger small"></div>
                 </div>
@@ -115,3 +117,22 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modalConfirmar">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header btn btn-semear text-white">
+                <h5 class="modal-title">Orçamento Enviado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h3>Solicitação de Orçamento enviado com sucesso!</h3>
+                <p>Em breve nossa equipe retornará com todas as informações necessárias.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-semear" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/EcommerceService/ecommerceService.js"></script>

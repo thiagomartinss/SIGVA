@@ -17,7 +17,7 @@ class ProdutoModel {
     #produtoImagem;
 
     get produtoId() { return this.#produtoId; } set produtoId(produtoId) { this.#produtoId = produtoId; }
-    get produtoSku() {return this.#produtoSku;} set produtoSku(produtoSku) {this.#produtoSku = produtoSku;}
+    get produtoSku() { return this.#produtoSku; } set produtoSku(produtoSku) { this.#produtoSku = produtoSku; }
     get produtoNome() { return this.#produtoNome; } set produtoNome(produtoNome) { this.#produtoNome = produtoNome; }
     get valorVenda() { return this.#valorVenda; } set valorVenda(valorVenda) { this.#valorVenda = valorVenda; }
     get valorCompra() { return this.#valorCompra; } set valorCompra(valorCompra) { this.#valorCompra = valorCompra; }
@@ -61,8 +61,8 @@ class ProdutoModel {
                     imagem = "produto-sem-imagem.webp";
                 }
                 listaRetorno.push(new ProdutoModel(
-                    row['ID_PRODUTO'], 
-                    row['SKU'], 
+                    row['ID_PRODUTO'],
+                    row['SKU'],
                     row['DESC_PRODUTO'],
                     row['VALOR_VENDA'],
                     row['VALOR_COMPRA'],
@@ -84,7 +84,7 @@ class ProdutoModel {
             let valores = [this.#produtoSku, this.#produtoNome, this.#valorVenda, this.#valorCompra, this.#qtdEstoque, this.#marcaId, this.#tipoProdutoId, this.#produtoImagem];
 
             return await conexao.ExecutaComandoNonQuery(sql, valores);
-        } 
+        }
         else {
             let sql = "";
             let valores = [];
@@ -108,45 +108,33 @@ class ProdutoModel {
 
         if (rows.length > 0) {
             let row = rows[0];
+            let imagem = "";
+            if (row["PRODUTO_IMAGEM"] &&
+                fs.existsSync(global.CAMINHO_IMG_ABS + row["PRODUTO_IMAGEM"])) {
+
+                imagem = global.CAMINHO_IMG + row["PRODUTO_IMAGEM"];
+            }
+            else {
+                imagem = global.CAMINHO_IMG + "produto-sem-imagem.webp";
+            }
             return new ProdutoModel(
-                row['ID_PRODUTO'], 
+                row['ID_PRODUTO'],
                 row['SKU'],
-                row['DESC_PRODUTO'], 
-                row['VALOR_VENDA'], 
-                row['VALOR_COMPRA'], 
-                row['QTD_ESTOQUE'], 
-                row['MARCA_ID_MARCA'], 
+                row['DESC_PRODUTO'],
+                row['VALOR_VENDA'],
+                row['VALOR_COMPRA'],
+                row['QTD_ESTOQUE'],
+                row['MARCA_ID_MARCA'],
                 row['TIPO_PRODUTO_ID_TIPO'],
                 "",
                 "",
-                row['PRODUTO_IMAGEM']
+                imagem
+                //row['PRODUTO_IMAGEM']
             );
         }
         return null;
     }
 
-    async buscarProduto(id) {//DPS POR PRODUTO_IMAGEM AQUI ********* por que foi criado essa funcao?
-        let sql = `SELECT ID_PRODUTO, DESC_PRODUTO, VALOR_VENDA, VALOR_COMPRA, QTD_ESTOQUE, MARCA_ID_MARCA, TIPO_PRODUTO_ID_TIPO, PRODUTO_IMAGEM FROM PRODUTO WHERE ID_PRODUTO = ?`;
-        let valores = [id];
-        var row = await conexao.ExecutaComando(sql, valores);
-        if (row.length > 0) {
-            let r = row[0];
-            let imagem = "";
-
-            if (r["PRODUTO_IMAGEM"] &&
-                fs.existsSync(global.CAMINHO_IMG_ABS + r["PRODUTO_IMAGEM"])) {
-
-                imagem = global.CAMINHO_IMG + r["PRODUTO_IMAGEM"];
-            }
-            else {
-                imagem = global.CAMINHO_IMG + "produto-sem-imagem.webp";
-            }
-            return new ProdutoModel(r['ID_PRODUTO'], r['DESC_PRODUTO'], r['VALOR_VENDA'], r['VALOR_COMPRA'], r['QTD_ESTOQUE'], r['MARCA_ID_MARCA'], r['TIPO_PRODUTO_ID_TIPO'], "", "", imagem
-                //imagem
-            );
-        }
-        return null
-    }
     async atualizarEstoque(id, novaQuantidade) {
         let sql = "update tb_produto set prd_quantidade = ? where prd_id = ?";
         let valores = [novaQuantidade, id];
@@ -162,13 +150,13 @@ class ProdutoModel {
         if (rows.length > 0) {
             let row = rows[0];
             return new ProdutoModel(
-                row['ID_PRODUTO'], 
+                row['ID_PRODUTO'],
                 row['SKU'],
-                row['DESC_PRODUTO'], 
+                row['DESC_PRODUTO'],
                 row['VALOR_VENDA'],
                 row['VALOR_COMPRA'],
-                row['QTD_ESTOQUE'], 
-                row['MARCA_ID_MARCA'], 
+                row['QTD_ESTOQUE'],
+                row['MARCA_ID_MARCA'],
                 row['TIPO_PRODUTO_ID_TIPO'],
                 row['PRODUTO_IMAGEM']
             );
@@ -184,39 +172,42 @@ class ProdutoModel {
         if (rows.length > 0) {
             let row = rows[0];
             return new ProdutoModel(
-                row['ID_PRODUTO'], 
+                row['ID_PRODUTO'],
                 row['SKU'],
-                row['DESC_PRODUTO'], 
-                0, 0, 0, 
+                row['DESC_PRODUTO'],
+                0, 0, 0,
                 row['MARCA_ID_MARCA'],
-                0 
+                0
             );
         }
         return null;
     }
 
-   async excluir(id) {
+    async excluir(id) {
         let sql = "DELETE FROM PRODUTO WHERE ID_PRODUTO = ?";
         let valores = [id];
-        
+
         let result = await conexao.ExecutaComandoNonQuery(sql, valores);
-        
+
         return result;
     }
 
     toJSON() {
         return {
-            produtoId: this.#produtoId,
-            produtoSku: this.#produtoSku,
-            produtoNome: this.#produtoNome,
-            valorVenda: this.#valorVenda,
+            id: this.#produtoId,
+            nome: this.#produtoNome,
+            preco: this.#valorVenda,
+            imagem: this.#produtoImagem,
+            estoque: this.#qtdEstoque,
+
+            sku: this.#produtoSku,
             valorCompra: this.#valorCompra,
-            qtdEstoque: this.#qtdEstoque,
             marcaId: this.#marcaId,
+            marcaNome: this.#marcaNome,
             tipoProdutoId: this.#tipoProdutoId,
-            produtoImagem: this.#produtoImagem
-        };
+            tipoProdutoNome: this.#tipoProdutoNome
+        }
     }
-   
+
 }
 module.exports = ProdutoModel;

@@ -54,8 +54,55 @@ function calcularOrcamento() {
         (Preço base: R$ ${precoBase.toFixed(2)} + ajuste pela área: ${((multiplicador - 1) * 100).toFixed(0)}%)
     `;
 }
-//nao fiz ainda
 function validarEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 }
+function validarCamposOrcamento() {
+    let listaErros = [];
+
+    let elEmail = document.getElementById("orc_email");
+    let elArea = document.getElementById("orc_areaTotal");
+    let elCultura = document.getElementById("orc_cultura");
+
+    document.getElementById("msg-emailAlt").innerText = "";
+
+    elEmail.style.borderColor = "";
+    elArea.style.borderColor = "";
+    elCultura.style.borderColor = "";
+
+    let email = elEmail.value.trim();
+    let area = elArea.value.trim();
+    let cultura = elCultura.value.trim();
+    if (email === "") {
+        listaErros.push("emailAlt");
+        document.getElementById("msg-emailAlt").innerText = "E-mail obrigatório";
+        elEmail.style.borderColor = "red";
+    } else if (!validarEmail(email)) {
+        listaErros.push("emailAlt");
+        document.getElementById("msg-emailAlt").innerText = "E-mail inválido";
+        elEmail.style.borderColor = "red";
+    }
+    if (area === "") {
+        listaErros.push("areaAlt");
+        elArea.style.borderColor = "red";
+    }
+    if (cultura === "") {
+        listaErros.push("culturaAlt");
+        elCultura.style.borderColor = "red";
+    }
+    return listaErros.length === 0;
+}
+
+
+document.getElementById("btnEnviarOrcamento").addEventListener("click", function () {
+    if(!validarCamposOrcamento()){
+        return;
+    }
+    const modalOrcamento = bootstrap.Modal.getInstance(document.getElementById('modalOrcamento'));
+    modalOrcamento.hide();
+
+    const modalConfirm = new bootstrap.Modal(document.getElementById('modalConfirmar'));
+    modalConfirm.show();
+})
+

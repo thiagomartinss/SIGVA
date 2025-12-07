@@ -185,4 +185,33 @@ document.addEventListener("DOMContentLoaded", function () {
             })
         }
     }
+
+    document.getElementById("btnConfirmar").addEventListener("click", function () {
+        if (carrinho.length <= 0) {
+            document.getElementById("confirmMensagem").innerText =
+                "Carrinho vazio!";
+            const modalCarrinho = bootstrap.Modal.getInstance(document.getElementById('modalCarrinho'));
+            modalCarrinho.hide();//fecha o modal do carrinoh
+            setTimeout(() => {
+                const modalConfirm = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+                modalConfirm.show();//abre o novo 
+
+                document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+            }, 100);
+        } else {
+            const modalCarrinho = bootstrap.Modal.getInstance(document.getElementById('modalCarrinho'));
+            modalCarrinho.hide();//fecha o modal
+
+            setTimeout(() => {
+                const modalConfirm = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
+                modalConfirm.show();//abre o novo 
+
+                document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+            }, 100);
+        }
+        carrinho = [];
+        atualizaCarrinho();
+    });
+
+
 })

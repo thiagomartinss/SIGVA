@@ -102,6 +102,52 @@ class FuncionarioModel{
         let rows = await conexao.ExecutaComando(sql, valores);
         return rows;
     }
+
+   async validar(usuario, senha) {
+        const sql = `SELECT * FROM FUNCIONARIO WHERE USUARIO = ? AND SENHA = ? AND ATIVO = 1`;
+        const valores = [usuario, senha];
+        const banco = new Database();
+
+        const rows = await banco.ExecutaComando(sql, valores);
+
+        if(rows.length > 0) {
+            let row = rows[0];
+            
+            return new FuncionarioModel(
+                row["PESSOA_FISICA_ID_PESSOAFISICA"], 
+                row["MATRICULA"],                     
+                row["DT_ADMISSAO"],                  
+                null,                                
+                row["ATIVO"],                         
+                row["USUARIO"],                       
+                row["SENHA"]                          
+            );
+        }
+        return null;
+    }
+
+    async buscarPorId(id) {
+        const sql = "SELECT * FROM FUNCIONARIO WHERE MATRICULA = ?";
+        const valores = [id];
+
+        const banco = new Database();
+        const rows = await banco.ExecutaComando(sql, valores);
+
+        if(rows.length > 0) {
+            let row = rows[0];
+    
+            return new FuncionarioModel(
+                row["PESSOA_FISICA_ID_PESSOAFISICA"], 
+                row["MATRICULA"], 
+                row["DT_ADMISSAO"], 
+                null, 
+                row["ATIVO"], 
+                row["USUARIO"], 
+                row["SENHA"]
+            );
+        }
+        return null;
+    }
 }
 
 module.exports = FuncionarioModel;

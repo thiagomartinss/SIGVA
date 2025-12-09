@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
         btns[i].addEventListener("click", adicionarAoCarrinho);
     }
     document.addEventListener("show.bs.modal", renderCarrinho);
-    //document.getElementById("btnConfirmar").addEventListener("click", gravar);
     function calcularValorCarrinho() {
         let soma = 0;
         for (let item of carrinho) {
@@ -77,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let produtoId = this.dataset.produto;
         let that = this;
 
-        fetch("/produto/obter/" + produtoId)
+        fetch("/produto/buscar/" + produtoId)
             .then(r => r.json())
             .then(corpo => {
 

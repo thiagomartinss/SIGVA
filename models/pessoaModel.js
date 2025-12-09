@@ -183,7 +183,47 @@ class PessoaModel {
         return await conexao.ExecutaComando(sql, valores);
 
     }
+    async listarRelatorioPessoa(filtro) {
+        let sql = `
+            SELECT P.ID_PESSOA, P.EMAIL, P.TELEFONE, P.EH_CLIENTE, P.EH_FORNECEDOR,
+            PF.NOME, PF.CPF, PJ.NOME_FANTASIA, PJ.CNPJ
+                FROM PESSOA P
+            LEFT JOIN PESSOA_FISICA PF
+                ON P.ID_PESSOA = PF.ID_PESSOAFISICA
+            LEFT JOIN PESSOA_JURIDICA PJ
+                ON P.ID_PESSOA = PJ.ID_PESSOAJURIDICA
+        `;
+        if (filtro == 1) {
+            sql += ` WHERE P.EH_CLIENTE=1`;
+        }
+        if (filtro == 2) {
+            sql += ` WHERE P.EH_FORNECEDOR=1`;
+        }
+        sql += ` ORDER BY P.ID_PESSOA ASC`;
+        var rows = await conexao.ExecutaComando(sql);
 
+        let listaRetorno = [];
+        if (rows.length > 0) {
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+
+                listaRetorno.push({
+                    pessoaId: row["ID_PESSOA"],
+                    email: row["EMAIL"],
+                    telefone: this.telefoneMask(row["TELEFONE"]),
+                    ehCliente: row["EH_CLIENTE"],
+                    ehFornecedor: row["EH_FORNECEDOR"],
+
+                    nomePF: row["NOME"],
+                    cpf: row["CPF"],
+                    nomePJ: row["NOME_FANTASIA"],
+                    cnpj: row["CNPJ"]
+                });
+            }
+
+        }
+        return listaRetorno;
+    }
 }
 
 module.exports = PessoaModel;

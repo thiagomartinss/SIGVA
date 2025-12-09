@@ -1,0 +1,122 @@
+<div class="d-flex">
+    <aside class="sidebar d-flex flex-column">
+        <ul class="nav flex-column flex-grow-1">
+            <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fa-solid fa-house fa-fw"></i> Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " href="/ordemServico"><i class="fa-solid fa-clipboard-list fa-fw"></i> Ordem de
+                    Serviço</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/produto"><i class="fa-solid fa-boxes-stacked fa-fw"></i> Produtos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/servico"><i class="fa-solid fa-list fa-fw"></i> Serviços</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/equipamento"><i class="fa-solid fa-wrench fa-fw"></i> Equipamentos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/marca"><i class="fa-solid fa-tags fa-fw"></i> Marcas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/pessoa"><i class="fa-solid fa-user fa-fw"></i> Pessoas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/funcionario"><i class="fa-solid fa-user fa-fw"></i> Funcionários</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/relatorio"><i class="fa-solid fa-folder-open fa-fw"></i>
+                    Relatorios</a>
+            </li>
+            <hr />
+            <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fa-solid fa-clipboard-list fa-fw"></i> Sair</a>
+            </li>
+        </ul>
+    </aside>
+    <div class="container-fluid flex-grow-1 p-4">
+        
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="text-uppercase text-green100">Relatorios</h1>
+            </div>
+            <hr>
+            <div class="row g-4 justify-content">
+
+                <div class="col-md-6 col-lg-4 mt-4">
+                    <div class="card shadow-md">
+                        <div class="card-body text-center mb-4">
+                            <h5 class="card-title mt-3 mb-3">Ordem de Serviço por Período</h5>
+                            <p class="card-text">Filtrar ordens por data</p>
+                            <a href="/relatorio/relatorioOsPeriodo"  class=" btn btn-semear w-100 "><i class="fa-solid fa-folder-open fa-fw"></i>
+                                Gerar Relatório 
+                            </a >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mt-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center mb-4">
+                            <h5 class="card-title mt-3 mb-3">Ordem de Serviço por Marca</h5>
+                            <p class="card-text mb-3">Filtrar por marca</p>
+                            <a href="/relatorio/relatorioOsMarca" class="btn btn-semear w-100 h-30"><i class="fa-solid fa-folder-open fa-fw"></i>
+                                Gerar Relatório
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mt-4">
+                    <div class="card shadow-sm ">
+                        <div class="card-body text-center mb-4">
+                            <h5 class="card-title mt-3 mb-3">Ordem de Serviço por Status</h5>
+                            <p class="card-text">Concluídas e Pendentes</p>
+                            <a href="/relatorio/relatorioOsStatus" class="btn btn-semear w-100 h-30 "><i class="fa-solid fa-folder-open fa-fw"></i>
+                                Gerar Relatório
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 mt-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center mb-4">
+                            <h5 class="card-title mt-3 mb-3">Produtos por Tipo e Estoque</h5>
+                            <p class="card-text">Estoque e Tipos</p>
+                            <a href="/relatorio/relatorioProduto" class="btn btn-semear w-100 h-30"><i class="fa-solid fa-folder-open fa-fw"></i>
+                                Gerar Relatório
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mt-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center mb-4">
+                            <h5 class="card-title mt-3 mb-3">Relatório de Produtos </h5>
+                            <p class="card-text">Produtos sem Estoque</p>
+                            <a href="/relatorio/relatorioEstoque" class="btn btn-semear w-100 h-30"><i class="fa-solid fa-folder-open fa-fw"></i>
+                                Gerar Relatório
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 mt-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center mb-4">
+                            <h5 class="card-title mt-3 mb-3">Relatório de Pessoas</h5>
+                            <p class="card-text mb-3">Filtragem de clientes e forncedores</p>
+                            <a href="/relatorio/relatorioCliente" class="btn btn-semear w-100 h-30"><i class="fa-solid fa-folder-open fa-fw"></i>
+                                Gerar Relatório
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+       
+
+    </div>
+
+</div>

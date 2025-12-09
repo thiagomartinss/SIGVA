@@ -19,6 +19,7 @@ const routerPessoa = require("./routes/pessoaRoute");
 const routerFuncionario = require("./routes/funcionarioRoute");
 const routerEcommerce = require("./routes/ecommerceRoute");
 const routerEcommerceServ=require("./routes/ecommerceServiceRoute");
+const routerRelatorio=require("./routes/relatorioRoute");
 const path = require("path");
 const AuthMiddleware = require("./middlewares/authMiddleware"); 
 

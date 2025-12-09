@@ -208,6 +208,43 @@ class ProdutoModel {
             tipoProdutoNome: this.#tipoProdutoNome
         }
     }
+    //relatorio de produtos
+    async listarRelatorioProduto(filtro) {
+        let sql = `
+            SELECT
+                P.ID_PRODUTO, P.SKU, P.DESC_PRODUTO, P.VALOR_VENDA,
+                P.QTD_ESTOQUE, M.DESC_MARCA, TP.TIPO_DESCRICAO
+            FROM PRODUTO P
+            INNER JOIN TIPO_PRODUTO TP
+                ON P.TIPO_PRODUTO_ID_TIPO=TP.ID_TIPO
+            INNER JOIN MARCA M
+                ON P.MARCA_ID_MARCA= M.ID_MARCA
+        `;
+        if (filtro == 1) {
+            sql += `ORDER BY P.QTD_ESTOQUE DESC`;
+        }
+        if (filtro == 2) {
+            sql += `ORDER BY TP.TIPO_DESCRICAO ASC`;
+        }
+        var rows = await conexao.ExecutaComando(sql);
+        let listaRetorno = [];
+        if (rows.length > 0) {
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                listaRetorno.push({
+                    id: row["ID_PRODUTO"],
+                    sku: row["SKU"],
+                    nome: row["DESC_PRODUTO"],
+                    marca: row["DESC_MARCA"],
+                    tipo: row["TIPO_DESCRICAO"],
+                    estoque: row["QTD_ESTOQUE"],
+                    valor: row["VALOR_VENDA"]
+                });
+            }
+        }
+        return listaRetorno;
+
+    }
 
 }
 module.exports = ProdutoModel;

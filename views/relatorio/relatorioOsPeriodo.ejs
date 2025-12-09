@@ -2,10 +2,11 @@
     <aside class="sidebar d-flex flex-column">
         <ul class="nav flex-column flex-grow-1">
             <li class="nav-item">
-                <a class="nav-link active" href="#"><i class="fa-solid fa-house fa-fw"></i> Home</a>
+                <a class="nav-link" href="#"><i class="fa-solid fa-house fa-fw"></i> Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="/ordemServico"><i class="fa-solid fa-clipboard-list fa-fw"></i> Ordem de Serviço</a>
+                <a class="nav-link " href="/ordemServico"><i class="fa-solid fa-clipboard-list fa-fw"></i> Ordem de
+                    Serviço</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/produto"><i class="fa-solid fa-boxes-stacked fa-fw"></i> Produtos</a>
@@ -26,16 +27,37 @@
                 <a class="nav-link" href="/funcionario"><i class="fa-solid fa-user fa-fw"></i> Funcionários</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/relatorio"><i class="fa-solid fa-folder-open fa-fw"></i> Relatorios</a>
+                <a class="nav-link active" href="/relatorio"><i class="fa-solid fa-folder-open fa-fw"></i>
+                    Relatorios</a>
             </li>
             <hr />
             <li class="nav-item">
-                <a class="nav-link" href="/login/logout"><i class="fa-solid fa-user fa-fw"></i> Sair</a>
+                <a class="nav-link" href="#"><i class="fa-solid fa-clipboard-list fa-fw"></i> Sair</a>
             </li>
         </ul>
     </aside>
-    <!--conteudo principal-->
-    <div class="flex-grow-1 p-4">
-        <h1>admin</h1>
+    <div class="container-fluid flex-grow-1 p-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="text-uppercase text-green100">Relatorio de Ordens de Serviço por Periodo</h1>
+        </div>
+        <hr>
+    
+    <div class="table-responsive">
+        <table id="relProdutos" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>SKU</th>
+                    <th>NOME</th>
+                    <th>MARCA</th>
+                    <th>TIPO</th>
+                    <th>ESTOQUE</th>
+                    <th>VALOR</th>
+                </tr>
+            </thead>
+        </table>
     </div>
+
+</div>
+
 </div>

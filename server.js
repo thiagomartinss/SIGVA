@@ -52,17 +52,17 @@ server.use("/ecommerceService",routerEcommerceServ);
 server.use("/contact", routeContact);
 server.use("/about", routeAbout);
 server.use("/register", routeRegister);
-
+server.use("/produto", routeProduto);
 let auth = new AuthMiddleware();
 
 server.use("/admin",auth.verificaLogin, routeAdmin);
 server.use("/marca",auth.verificaLogin, routeMarca);
 server.use("/servico",auth.verificaLogin, routeServico);
 server.use("/equipamento",auth.verificaLogin, routeEquipamento);
-server.use("/produto",auth.verificaLogin, routeProduto);
 server.use("/ordemServico",auth.verificaLogin, routeOrdemServico);
 server.use("/pessoa",auth.verificaLogin, routerPessoa);
 server.use("/funcionario",auth.verificaLogin, routerFuncionario);
+server.use("/relatorio",auth.verificaLogin, routerRelatorio);
 
 
 global.CAMINHO_IMG = "/img/produtos/";

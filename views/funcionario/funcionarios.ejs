@@ -1,3 +1,4 @@
+<script src="/js/funcionario/gerenciarFuncionario.js"></script>
 <div class="d-flex">
     <aside class="sidebar d-flex flex-column">
         <ul class="nav flex-column flex-grow-1">
@@ -30,7 +31,7 @@
             </li>
             <hr />
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa-solid fa-user fa-fw"></i> Sair</a>
+                <a class="nav-link" href="../login/logout"><i class="fa-solid fa-user fa-fw"></i> Sair</a>
             </li>
         </ul>
     </aside>
@@ -40,5 +41,199 @@
             <a href="#" class="btn btn-success text-uppercase bg-green200"  data-bs-toggle="modal" data-bs-target="#modalFuncionario"><i class="fa-solid fa-plus"></i> Novo</a>
         </div>
         <hr>
+        <div class="table-responsive" style="margin-top: 15px;">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nome</th>
+                        <th>Matricula</th>
+                        <th>Data Admissão</th>
+                        <th>Data Demissão</th>
+                        <th>Usuário</th>
+                        <th>Ativo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% lista.forEach(function(funcionario) { %>
+                    <tr>
+                        <td><%= funcionario.funcionarioId %></td>
+                        <td><%= funcionario.nome %></td>
+                        <td><%= funcionario.matricula %></td>
+                        <td><%= new Date(funcionario.dataAdmissao).toLocaleDateString('pt-BR') %></td>
+                        <td><%= funcionario.dataDemissao ? new Date(funcionario.dataDemissao).toLocaleDateString('pt-BR') : '-' %></td>
+                        <td><%= funcionario.usuario ? funcionario.usuario : '-' %></td>
+                        <td>
+                            <% if(funcionario.ativo == 1) { %>
+                                <i class="fas fa-check-circle text-success"></i>
+                            <% } else { %>
+                                <i class="fas fa-times-circle text-danger"></i>
+                            <% } %>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-sm btn-alterar" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalFuncionarioAlt"
+                                data-id="<%= funcionario.funcionarioId %>"
+                                data-nome="<%= funcionario.nome %>"
+                                data-matricula="<%= funcionario.matricula %>"
+                                data-admissao="<%= new Date(funcionario.dataAdmissao).toISOString().split('T')[0] %>"
+                                data-demissao="<%= funcionario.dataDemissao ? new Date(funcionario.dataDemissao).toISOString().split('T')[0] : '' %>"
+                                data-usuario="<%= funcionario.usuario %>"
+                                data-ativo="<%= funcionario.ativo %>">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button class="btn btn-warning btn-sm btn-senha"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalAltSenha"
+                            data-id="<%= funcionario.funcionarioId %>"
+                            data-usuario="<%= funcionario.usuario %>">
+                            <i class="fas fa-key"></i>
+                        </button>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="modalFuncionario">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title">Cadastro de Funcionários</h5>
+                        <span class="text-danger" style="font-size: 0.9rem;">
+                            <i class="fas fa-info-circle"></i> Para cadastrar um funcionário, a pessoa deve estar previamente cadastrada no sistema!
+                        </span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>  
+                <div class="modal-body">
+                    <input type="hidden" id="idPessoa">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control text-uppercase" id="nome" placeholder="nome">
+                        <label for="nome">Digite o nome para procurar no cadastro</label>
+                        <ul id="listaSugestoes" class="list-group position-absolute w-100" style="z-index: 1000; display: none; max-height: 200px; overflow-y: auto;"></ul>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" inputmode="numeric" pattern="[0-9]*" class="form-control text-uppercase" id="matricula" placeholder="matricula">
+                        <label for="matricula">Número de Matrícula</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control text-uppercase" id="dtAdmissao" placeholder="Data Admissão">
+                        <label for="dtAdmissao">Data Admissão</label>
+                        <span class="text-danger" id="msg-dtAdm"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control text-uppercase" id="dtDemissao" placeholder="Data Demissão">
+                        <label for="dtDemissao">Data Demissão</label>
+                        <span class="text-danger" id="msg-dtDem"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control text-uppercase" id="usuario" placeholder="Usuário">
+                        <label for="usuario">Usuário</label>
+                        <span class="text-danger" id="msg-usuario"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control text-uppercase" id="senha" placeholder="Senha">
+                        <label for="senha">Senha</label>
+                        <span class="text-danger" id="msg-senha"></span>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input border border-2 border-primary" type="checkbox" id="ativo">
+                        <label class="form-check-label" for="ativo" id="ativo" >Usuário ativo no sistema?</label>
+                        <div>
+                            <span class="text-danger" style="font-size: 0.9rem;">
+                                <i class="fas fa-info-circle"></i> Selecione essa opção para o funcionário acessar o sistema!
+                            </span>
+                        </div>
+                    </div>
+                    <span class="text-danger" id="msg-funcionario"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success bg-green200" id="btnCadastrar">Cadastrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalFuncionarioAlt">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title">Alterar dados de Funcionários</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>  
+                <div class="modal-body">
+                    <input type="hidden" id="idPessoaAlt">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control text-uppercase" id="nomeAlt" placeholder="nome">
+                        <label for="nome">Nome</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" inputmode="numeric" pattern="[0-9]*" class="form-control text-uppercase" id="matriculaAlt" placeholder="matricula">
+                        <label for="matricula">Número de Matrícula</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control text-uppercase" id="dtAdmissaoAlt" placeholder="Data Admissão">
+                        <label for="dtAdmissao">Data Admissão</label>
+                        <span class="text-danger" id="msg-dtAdmAlt"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control text-uppercase" id="dtDemissaoAlt" placeholder="Data Demissão">
+                        <label for="dtDemissao">Data Demissão</label>
+                        <span class="text-danger" id="msg-dtDemAlt"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control text-uppercase" id="usuarioAlt" placeholder="Usuário">
+                        <label for="usuario">Usuário</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input border border-2 border-primary" type="checkbox" id="ativoAlt">
+                        <label class="form-check-label" for="ativoAlt" id="ativoAlt" >Usuário ativo no sistema?</label>
+                        <div>
+                            <span class="text-danger" style="font-size: 0.9rem;">
+                                <i class="fas fa-info-circle"></i> Selecione essa opção para o funcionário acessar o sistema!
+                            </span>
+                        </div>
+                    </div>
+                    <span class="text-danger" id="msg-funcionarioAlt"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success bg-green200" id="btnAlterar">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalAltSenha">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alterar Senha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="idFuncionarioSenha">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control text-uppercase" id="usuarioSenha" placeholder="Usuário" disabled>
+                        <label for="usuarioSenha">Usuário</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="novaSenha" placeholder="Nova Senha">
+                        <label for="novaSenha">Nova Senha</label>
+                    </div>
+                    <span class="text-danger" id="msg-senhaAlt"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success bg-green200" id="btnSalvarSenha">Atualizar Senha</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

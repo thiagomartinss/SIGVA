@@ -1,6 +1,7 @@
 
 const express = require('express');
 const expressEjsLayouts = require('express-ejs-layouts');
+const cookieParser = require('cookie-parser');
 const server = express();
 
 const routerHome = require("./routes/homeRoute");
@@ -20,6 +21,7 @@ const routerEcommerce = require("./routes/ecommerceRoute");
 const routerEcommerceServ=require("./routes/ecommerceServiceRoute");
 const routerRelatorio=require("./routes/relatorioRoute");
 const path = require("path");
+const AuthMiddleware = require("./middlewares/authMiddleware"); 
 
 /*
 Os trechos abaixo informa qual é o caminho das views e da public para que seja realizado o deploy
@@ -35,25 +37,33 @@ server.use(express.static(path.join(process.cwd(), './public'))); //Expor a past
 server.set('layout', './layout.ejs');
 server.use(expressEjsLayouts);
 
+server.use(express.urlencoded({ extended: true })); 
+server.use(express.json());
+
 server.use(express.urlencoded({ extended: true })); //Configuração para as requisições POST (Submissão)
 server.use(express.json()); //Configurar a possibilidade de fazer parse em uma string JSON
 
+server.use(cookieParser());
+
 server.use("/", routerHome);
 server.use("/login", routeLogin);
+server.use("/ecommerce", routerEcommerce);
+server.use("/ecommerceService",routerEcommerceServ);
 server.use("/contact", routeContact);
 server.use("/about", routeAbout);
 server.use("/register", routeRegister);
-server.use("/admin", routeAdmin);
-server.use("/marca", routeMarca);
-server.use("/servico", routeServico);
-server.use("/equipamento", routeEquipamento);
-server.use("/produto", routeProduto);
-server.use("/ordemServico", routeOrdemServico);
-server.use("/pessoa", routerPessoa);
-server.use("/funcionario", routerFuncionario);
-server.use("/ecommerce", routerEcommerce);
-server.use("/ecommerceService",routerEcommerceServ);
-server.use("/relatorio",routerRelatorio);
+
+let auth = new AuthMiddleware();
+
+server.use("/admin",auth.verificaLogin, routeAdmin);
+server.use("/marca",auth.verificaLogin, routeMarca);
+server.use("/servico",auth.verificaLogin, routeServico);
+server.use("/equipamento",auth.verificaLogin, routeEquipamento);
+server.use("/produto",auth.verificaLogin, routeProduto);
+server.use("/ordemServico",auth.verificaLogin, routeOrdemServico);
+server.use("/pessoa",auth.verificaLogin, routerPessoa);
+server.use("/funcionario",auth.verificaLogin, routerFuncionario);
+
 
 global.CAMINHO_IMG = "/img/produtos/";
 global.CAMINHO_IMG_ABS = __dirname + "/public/img/produtos/";

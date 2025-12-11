@@ -1,5 +1,7 @@
 const ProdutoModel = require("../models/produtoModel");
 const PessoaModel = require("../models/pessoaModel");
+//ver aqui
+const OrdemServicoModel = require("../models/odemServicoModel");
 
 class RelatorioController {
     async relatorioView(req, res) {
@@ -23,7 +25,7 @@ class RelatorioController {
     async relatorioCliente(req, res) {
         res.render("relatorio/relatorioCliente");
     }
-    async listarProdutosRel(req, res) {//confirmar 
+    async listarProdutosRel(req, res) {
         let filtro = req.query.filtro;
         let produto = new ProdutoModel();
         let lista = await produto.listarRelatorioProduto(filtro);
@@ -35,5 +37,28 @@ class RelatorioController {
         let lista = await pessoa.listarRelatorioPessoa(filtro);
         res.json({ lista })
     }
+    async relatorioEstoqueZerado(req, res) {
+        let filtro = 0;
+        let produto = new ProdutoModel();
+        let lista = await produto.listarRelatorioProduto(filtro);
+        res.json({ lista });
+    }
+    async relatorioOrdemStatus(req, res) {
+        let filtro = req.query.filtro;
+        let ordem = new OrdemServicoModel();
+        let lista = await ordem.listarRelatorioOrdemServico(filtro);
+        res.json({ lista });
+    }
+    async relatorioOrdemPeriodo(req, res) {
+        let filtro = req.query.filtro;
+        let ordem = new OrdemServicoModel();
+        let lista = await ordem.listarRelatorioOrdemServicoPeriodo(filtro);
+        res.json({ lista });
+    }
+    async relatorioOrdemMarca(req, res) {
+    let ordem = new OrdemServicoModel();
+    let lista = await ordem.listarRelatorioOrdemMarca();
+    res.json({ lista });
+}
 }
 module.exports = RelatorioController;

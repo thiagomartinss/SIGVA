@@ -8,5 +8,7 @@ router.post("/cadastrar", ordemservicoController.cadastrar);
 router.get("/listar", ordemservicoController.listarView);
 router.get("/buscar/:id", ordemservicoController.buscarDados);
 router.post("/alterar", ordemservicoController.alterar);
-
+router.post("/concluir", ordemservicoController.concluir);
+router.post("/cancelar", ordemservicoController.cancelar);
+router.get("/editar/:id", ordemservicoController.editarView);
 module.exports=router;

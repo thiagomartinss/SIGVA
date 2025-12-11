@@ -42,7 +42,7 @@ class LoginController {
     logout(req, res) {
         res.clearCookie("usuarioLogado");
         //req.session.destroy();
-        res.redirect("/login");
+        res.redirect("/");
     }
 }
 

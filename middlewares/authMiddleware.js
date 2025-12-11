@@ -12,6 +12,7 @@ class AuthMiddleware {
         
             if(funcionario != null && funcionario.ativo == 1) {
                 res.locals.funcionarioLogado = funcionario; 
+                res.locals.layout = 'layoutAdmin';
                 next(); 
             }
             else {

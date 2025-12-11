@@ -90,14 +90,10 @@
                                     <% } %>
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn-primary btn-sm btn-editar-os" 
-                                        title="Editar OS"
-                                        data-id="<%= os.ID_OS %>"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modalEditarOs">
-                                        <i class="fas fa-pen"></i>
-                                    </button>
                                     <% if(os.STATUS == 'EM ABERTO') { %>
+                                        <a href="/ordemServico/editar/<%= os.ID_OS %>" class="btn btn-primary btn-sm" title="Editar OS">
+                                            <i class="fas fa-pen"></i>
+                                        </a>
                                         <button class="btn btn-success btn-sm btn-concluir-os" 
                                             title="Concluir OS"
                                             data-id="<%= os.ID_OS %>"
@@ -107,9 +103,20 @@
                                             data-bs-target="#modalConcluirOs">
                                             <i class="fas fa-check"></i>
                                         </button>
+                                        <button class="btn btn-danger btn-sm btn-cancelar-os" 
+                                            title="Cancelar OS"
+                                            data-id="<%= os.ID_OS %>">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
                                     <% } else { %>
-                                        <button class="btn btn-secondary btn-sm" disabled title="Já finalizada">
+                                        <button class="btn btn-secondary btn-sm" disabled title="Visualizar">
+                                            <i class="fas fa-pen"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" disabled title="Concluído/Cancelado">
                                             <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" disabled title="Concluído/Cancelado">
+                                            <i class="fas fa-ban"></i>
                                         </button>
                                     <% } %>
                                 </td>
@@ -224,7 +231,7 @@
                             <p class="text-center text-muted small">Valor Final</p>
                         </div>
                     </div>
-                    <p class="text-danger small"><i class="fa-solid fa-triangle-exclamation"></i> Após concluir, o status mudará para FECHADO e o estoque será baixado.</p>
+                    <p class="text-danger small"><i class="fa-solid fa-triangle-exclamation"></i> Após concluir, o status mudará para FINALIZADO e o estoque será baixado.</p>
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Voltar</button>

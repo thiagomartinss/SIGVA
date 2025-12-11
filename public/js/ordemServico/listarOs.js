@@ -130,4 +130,92 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+
+    const btnsConcluir = document.querySelectorAll(".btn-concluir-os");
+    const labelId = document.getElementById("confOsId");
+    const labelCliente = document.getElementById("confCliente");
+    const labelValor = document.getElementById("confValor");
+    const btnConfirmarConclusao = document.getElementById("btnConfirmarConclusao");
+
+    let idParaConcluir = null;
+
+
+    btnsConcluir.forEach(btn => {
+        btn.addEventListener("click", function() {
+            let dados = this.dataset;
+            idParaConcluir = dados.id;
+
+            
+            labelId.innerText = "#" + dados.id;
+            labelCliente.innerText = dados.cliente;
+            
+            
+            let valorFormatado = parseFloat(dados.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            labelValor.innerText = valorFormatado;
+        });
+    });
+
+
+    if(btnConfirmarConclusao) {
+        btnConfirmarConclusao.addEventListener("click", function() {
+            if(!idParaConcluir) return;
+
+            
+            this.disabled = true;
+            this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...';
+
+            fetch("/ordemServico/concluir", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idOs: idParaConcluir })
+            })
+            .then(res => res.json())
+            .then(response => {
+                if(response.ok) {
+                    alert("Ordem de Serviço Finalizada!");
+                    window.location.reload(); 
+                } else {
+                    alert("Erro: " + response.msg);
+                    
+                    document.getElementById("btnConfirmarConclusao").disabled = false;
+                    document.getElementById("btnConfirmarConclusao").innerHTML = '<i class="fa-solid fa-check me-2"></i>CONFIRMAR';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Erro de conexão.");
+            });
+        });
+    }
+
+    document.addEventListener("click", function(e) {
+       
+        const btn = e.target.closest(".btn-cancelar-os");
+        
+        if(btn) {
+            let id = btn.dataset.id;
+        
+            if(confirm(`Tem certeza que deseja CANCELAR a Ordem de Serviço #${id}?`)) {
+                
+                fetch("/ordemServico/cancelar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ idOs: id })
+                })
+                .then(res => res.json())
+                .then(response => {
+                    if(response.ok) {
+                        alert("Ordem de Serviço cancelada com sucesso!");
+                        window.location.reload();
+                    } else {
+                        alert("Erro ao cancelar: " + response.msg);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Erro de conexão.");
+                });
+            }
+        }
+    });
 });

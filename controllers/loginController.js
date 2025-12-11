@@ -21,12 +21,12 @@ class LoginController {
 
             if(funcionario != null) {
                 console.log("LOGIN SUCESSO! Redirecionando para /admin");
-                //res.cookie("usuarioLogado", funcionario.matricula, { maxAge: 900000, httpOnly: true });
-                req.session.usuarioLogado = funcionario.matricula;
-                //res.redirect("/admin");
-                req.session.save(() => {
-                    res.redirect("/admin");
-                });
+                res.cookie("usuarioLogado", funcionario.matricula, { maxAge: 900000, httpOnly: true });
+                //req.session.usuarioLogado = funcionario.matricula;
+                res.redirect("/admin");
+                //req.session.save(() => {
+                //    res.redirect("/admin");
+                //});
             }
             else {
                 console.log("LOGIN FALHOU! Usuário não encontrado ou Inativo.");
@@ -40,8 +40,8 @@ class LoginController {
     }
     
     logout(req, res) {
-        //res.clearCookie("usuarioLogado");
-        req.session.destroy();
+        res.clearCookie("usuarioLogado");
+        //req.session.destroy();
         res.redirect("/login");
     }
 }

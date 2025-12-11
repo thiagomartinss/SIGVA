@@ -132,6 +132,134 @@ class OrdemServicoModel {
         await conexao.ExecutaComandoNonQuery(`DELETE FROM ITENS_OSSERVICO WHERE ORDEM_SERVICO_ID_OS = ?`, [idOs], connection);
         await conexao.ExecutaComandoNonQuery(`DELETE FROM ITENS_OSPRODUTO WHERE ORDEM_SERVICO_ID_OS = ?`, [idOs], connection);
     }
+
+
+    /* RELATORIOS */
+    /*
+    async listarRelatorioOrdemServico(filtro) {
+        let sql = `
+        SELECT 
+            OS.ID_OS, OS.DT_ABERTURA, OS.DT_FECHAMENTO, OS.STATUS,
+            OS.DESC_SERVICO, OS.VALOR, PF.NOME AS CLIENTE
+            FROM ORDEM_SERVICO OS
+            INNER JOIN PESSOA P
+                ON OS.PESSOA_ID_PESSOA = P.ID_PESSOA
+            AND OS.PESSOA_ENDERECO_ID_ENDERECO = P.ENDERECO_ID_ENDERECO
+            INNER JOIN PESSOA_FISICA PF
+                ON PF.ID_PESSOAFISICA = P.ID_PESSOA
+        `;
+
+        if (filtro == 0) {
+            sql += ` WHERE OS.STATUS = 'EM ABERTO' `;
+        }
+
+        if (filtro == 1) {
+            sql += ` WHERE OS.STATUS = 'FINALIZADO' `;
+        }
+
+        sql += ` ORDER BY OS.ID_OS DESC `;
+
+        let rows = await conexao.ExecutaComando(sql);
+
+        let listaRetorno = [];
+
+        if (rows.length > 0) {
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+
+                listaRetorno.push({
+                    id: row["ID_OS"],
+                    abertura: row["DT_ABERTURA"],
+                    fechamento: row["DT_FECHAMENTO"],
+                    status: row["STATUS"],
+                    servico: row["DESC_SERVICO"],
+                    cliente: row["CLIENTE"],
+                    valor: row["VALOR"]
+                });
+            }
+        }
+
+        return listaRetorno;
+    }
+    async listarRelatorioOrdemServicoPeriodo(filtro) {
+
+        let sql = `
+        SELECT 
+            OS.ID_OS, OS.DT_ABERTURA, OS.DT_FECHAMENTO, OS.STATUS, OS.DESC_SERVICO, OS.VALOR,
+            PF.NOME AS CLIENTE
+        FROM ORDEM_SERVICO OS
+        INNER JOIN PESSOA P
+            ON OS.PESSOA_ID_PESSOA = P.ID_PESSOA
+           AND OS.PESSOA_ENDERECO_ID_ENDERECO = P.ENDERECO_ID_ENDERECO
+        INNER JOIN PESSOA_FISICA PF
+            ON PF.ID_PESSOAFISICA = P.ID_PESSOA
+    `;
+        if (filtro == 1) {
+            sql += ` ORDER BY OS.DT_ABERTURA DESC `;
+        }
+        if (filtro == 2) {
+            sql += ` ORDER BY OS.DT_FECHAMENTO DESC `;
+        }
+
+        let rows = await conexao.ExecutaComando(sql);
+        let listaRetorno = [];
+
+        if (rows.length > 0) {
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+
+                listaRetorno.push({
+                    id: row["ID_OS"],
+                    abertura: row["DT_ABERTURA"],
+                    fechamento: row["DT_FECHAMENTO"],
+                    status: row["STATUS"],
+                    servico: row["DESC_SERVICO"],
+                    cliente: row["CLIENTE"],
+                    valor: row["VALOR"]
+                });
+            }
+        }
+
+        return listaRetorno;
+    }
+    async listarRelatorioOrdemMarca() {
+        let sql = `
+        SELECT 
+            OS.ID_OS AS ID,
+            M.DESC_MARCA AS MARCA,
+            E.DESC_EQUIPAMENTO AS EQUIPAMENTO,
+            OS.DESC_SERVICO AS DESCRICAO,
+            PF.NOME AS CLIENTE,
+            OS.VALOR AS VALOR
+        FROM ORDEM_SERVICO OS
+        INNER JOIN EQUIPAMENTO E
+            ON OS.EQUIPAMENTO_ID_EQUIPAMENTO = E.ID_EQUIPAMENTO
+        INNER JOIN MARCA M
+            ON E.ID_MARCA = M.ID_MARCA
+        INNER JOIN PESSOA P
+            ON OS.PESSOA_ID_PESSOA = P.ID_PESSOA
+            AND OS.PESSOA_ENDERECO_ID_ENDERECO = P.ENDERECO_ID_ENDERECO
+        INNER JOIN PESSOA_FISICA PF
+            ON PF.ID_PESSOAFISICA = P.ID_PESSOA
+        ORDER BY OS.ID_OS
+    `;
+
+        let rows = await conexao.ExecutaComando(sql);
+        let listaRetorno = [];
+
+        for (let row of rows) {
+            listaRetorno.push({
+                id: row["ID"],
+                marca: row["MARCA"],
+                equipamento: row["EQUIPAMENTO"],
+                descricao: row["DESCRICAO"],
+                cliente: row["CLIENTE"],
+                valor: row["VALOR"]
+            });
+        }
+
+        return listaRetorno;
+    }*/
 }
 
 module.exports = OrdemServicoModel;

@@ -16,4 +16,5 @@ router.get("/pessoas",ctrl.listarPessoasRel);
 router.get("/relatorioStatus", ctrl.relatorioOrdemStatus);
 router.get("/relatorioPeriodo", ctrl.relatorioOrdemPeriodo);
 router.get("/relatorioMarca", ctrl.relatorioOrdemMarca);
+router.get("/estoqueZerado", ctrl.relatorioEstoqueZerado);
 module.exports = router;

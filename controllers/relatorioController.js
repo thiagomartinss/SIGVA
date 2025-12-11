@@ -1,7 +1,7 @@
 const ProdutoModel = require("../models/produtoModel");
 const PessoaModel = require("../models/pessoaModel");
 //ver aqui
-const OrdemServicoModel = require("../models/odemServicoModel");
+const OrdemServicoModel = require("../models/ordemServicoModel");
 
 class RelatorioController {
     async relatorioView(req, res) {

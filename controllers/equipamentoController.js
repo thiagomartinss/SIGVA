@@ -184,5 +184,18 @@ class EquipamentoController{
             });
         }
     }
+
+    async buscarPorNome(req, res) {
+        let termo = req.params.nome;
+        
+        try {
+            let equipamento = new EquipamentoModel();
+            let lista = await equipamento.listarPorNome(termo);
+            res.json({ equipamentos: lista });
+        } catch (error) {
+            console.error("Erro busca equipamento:", error);
+            res.status(500).json({ ok: false, msg: "Erro no servidor" });
+        }
+    }
 }
 module.exports = EquipamentoController;

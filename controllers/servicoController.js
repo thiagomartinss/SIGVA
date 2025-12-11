@@ -171,5 +171,18 @@ class ServicoController{
             });
         }
     }
+
+    async buscarPorNome(req, res) {
+        let termo = req.params.nome;
+        
+        try {
+            let servicoModel = new ServicoModel();
+            let lista = await servicoModel.listarPorNome(termo);
+            res.json({ servicos: lista });
+        } catch (error) {
+            console.error("Erro ao buscar serviço:", error);
+            res.status(500).json({ ok: false, msg: "Erro no servidor" });
+        }
+    }
 }
 module.exports = ServicoController;

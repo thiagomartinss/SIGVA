@@ -74,7 +74,6 @@ class ServicoModel {
         return null;
     }
 
-
     async excluir(id) {
         let sql = "DELETE FROM SERVICO WHERE ID_SERVICO = ?";
         let valores = [id];
@@ -82,6 +81,30 @@ class ServicoModel {
         let result = await conexao.ExecutaComandoNonQuery(sql, valores);
 
         return result;
+    }
+
+    async listarPorNome(termo) {
+        let sql = "SELECT * FROM SERVICO WHERE DESC_SERVICO LIKE ? ORDER BY DESC_SERVICO ASC";
+        let valores = [`%${termo}%`];
+        
+        let rows = await conexao.ExecutaComando(sql, valores);
+        
+        let listaRetorno = [];
+        if(rows.length > 0){
+            for(let i=0; i<rows.length; i++){
+                var row = rows[i];
+                
+                // --- CORREÇÃO AQUI ---
+                // Em vez de "new ServicoModel(...)", criamos um objeto simples
+                // para garantir que o JSON consiga ler os dados no Front-End
+                listaRetorno.push({
+                    servicoId: row['ID_SERVICO'], 
+                    servicoDesc: row['DESC_SERVICO'], 
+                    servicoValor: row['VALOR_SERVICO']
+                });
+            }
+        }
+        return listaRetorno;
     }
 }
 

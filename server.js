@@ -2,6 +2,7 @@
 const express = require('express');
 const expressEjsLayouts = require('express-ejs-layouts');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const server = express();
 
 const routerHome = require("./routes/homeRoute");
@@ -42,6 +43,17 @@ server.use(express.json());
 
 server.use(express.urlencoded({ extended: true })); //Configuração para as requisições POST (Submissão)
 server.use(express.json()); //Configurar a possibilidade de fazer parse em uma string JSON
+
+server.use(session({
+    secret: "ChaveSuperSecreta123", 
+    resave: false,                     
+    saveUninitialized: false,          
+    cookie: { 
+        maxAge: 1000 * 60 * 60 * 1, 
+        httpOnly: true, 
+        secure: false   
+    }
+}));
 
 server.use(cookieParser());
 

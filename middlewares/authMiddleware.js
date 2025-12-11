@@ -3,8 +3,9 @@ const FuncionarioModel = require("../models/funcionarioModel");
 class AuthMiddleware {
 
     async verificaLogin(req, res, next) {
-        let funcionarioMatricula = req.cookies.usuarioLogado;
-
+        //let funcionarioMatricula = req.cookies.usuarioLogado;
+        let funcionarioMatricula = req.session.usuarioLogado;
+        
         if(funcionarioMatricula) {
             let funcionario = new FuncionarioModel();
             funcionario = await funcionario.buscarPorId(funcionarioMatricula);

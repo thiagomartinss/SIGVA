@@ -148,6 +148,101 @@ class OrdemServicoController {
             res.send({ ok: false, msg: "Erro interno." });
         }
     }
+
+    async editarView(req, res) {
+        try {
+            let id = req.params.id;
+            let osModel = new OrdemServicoModel();
+            
+            // 1. Busca os dados da OS para preencher os campos
+            let dadosOs = await osModel.buscarPorIdCompleto(id);
+
+            // 2. Busca as listas para os Modais de Pesquisa (igual ao criar)
+            const EquipamentoModel = require("../models/equipamentoModel");
+            const ProdutoModel = require("../models/produtoModel");
+            const ServicoModel = require("../models/servicoModel");
+            
+            let equipamento = new EquipamentoModel();
+            let produto = new ProdutoModel();
+            let servico = new ServicoModel();
+
+            const listaEquipamentos = await equipamento.listarEquipamentosParaOrdem();
+            const listaProdutos = await produto.listarProdutos();
+            const listaServicos = await servico.listarServico();
+
+            // 3. Renderiza a página de edição enviando TUDO
+            res.render('ordemServico/editarOs', { 
+                dadosOs: dadosOs, // Dados da OS atual
+                listaEquipamentos: listaEquipamentos, 
+                listaProdutos: listaProdutos, 
+                listaServicos: listaServicos 
+            });
+
+        } catch (error) {
+            console.log(error);
+            res.redirect('/ordemServico/listar');
+        }
+    }
+
+    async concluir(req, res) {
+        try {
+            let idOs = req.body.idOs;
+            
+            if(!idOs) {
+                return res.send({ ok: false, msg: "ID da OS não informado." });
+            }
+
+            const db = new Database();
+            const osModel = new OrdemServicoModel();
+            
+            let dadosOs = await osModel.buscarPorIdCompleto(idOs);
+            let listaProdutos = dadosOs.produtos || [];
+
+            let connection;
+
+            try {
+                connection = await db.beginTransaction();
+
+                for (let item of listaProdutos) {
+                    await osModel.baixarEstoqueProduto(item.PRODUTO_ID_PRODUTO, item.QUANTIDADE, connection);
+                }
+
+                await osModel.finalizarOS(idOs, connection);
+
+                await db.commit(connection);
+                res.send({ ok: true, msg: "OS Finalizada e Estoque Atualizado com sucesso!" });
+
+            } catch (error) {
+                if (connection) await db.rollback(connection);
+                console.error(error);
+                res.send({ ok: false, msg: "Erro ao concluir: " + error.message });
+            }
+
+        } catch (ex) {
+            console.error(ex);
+            res.send({ ok: false, msg: "Erro interno ao concluir OS." });
+        }
+    }
+
+    async cancelar(req, res) {
+        try {
+            let idOs = req.body.idOs;
+
+            if(!idOs) {
+                return res.send({ ok: false, msg: "ID da OS não informado." });
+            }
+
+            let osModel = new OrdemServicoModel();
+            
+            await osModel.cancelarOS(idOs);
+
+            res.send({ ok: true, msg: "Ordem de Serviço cancelada!" });
+
+        } catch (error) {
+            console.error(error);
+            res.send({ ok: false, msg: "Erro ao cancelar: " + error.message });
+        }
+    }
 }
 
 

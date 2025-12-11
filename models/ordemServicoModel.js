@@ -133,6 +133,27 @@ class OrdemServicoModel {
         await conexao.ExecutaComandoNonQuery(`DELETE FROM ITENS_OSPRODUTO WHERE ORDEM_SERVICO_ID_OS = ?`, [idOs], connection);
     }
 
+    async finalizarOS(idOs, connection) {
+        let sql = `UPDATE ORDEM_SERVICO 
+                   SET STATUS = 'FINALIZADO', DT_FECHAMENTO = NOW() 
+                   WHERE ID_OS = ?`;
+        await conexao.ExecutaComandoNonQuery(sql, [idOs], connection);
+    }
+    
+    async baixarEstoqueProduto(idProduto, qtd, connection) {
+        let sql = `UPDATE PRODUTO 
+                   SET QTD_ESTOQUE = QTD_ESTOQUE - ? 
+                   WHERE ID_PRODUTO = ?`;
+        await conexao.ExecutaComandoNonQuery(sql, [qtd, idProduto], connection);
+    }
+
+    async cancelarOS(idOs, connection) {
+        let sql = `UPDATE ORDEM_SERVICO 
+                   SET STATUS = 'CANCELADO', DT_FECHAMENTO = NOW() 
+                   WHERE ID_OS = ?`;
+        await conexao.ExecutaComandoNonQuery(sql, [idOs], connection);
+    }
+
 
     /* RELATORIOS */
     /*

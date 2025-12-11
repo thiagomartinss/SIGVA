@@ -19,9 +19,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         html += `
                             <tr>
                                 <td>${item.id}</td>
-                                <td>${item.abertura}</td>
-                                <td>${item.fechamento}</td>
-                                <td class="${filtro === 0 && item.status === "ABERTO" ? "coluna-destaque" :
+                                <td>${item.abertura?.substring(0, 10)}</td>
+                                <td>${item.fechamento?.substring(0, 10)}</td>
+                                <td class="${filtro === 0 && item.status === "EM ABERTO" ? "coluna-destaque" :
                                 filtro === 1 && item.status === "FINALIZADO" ? "coluna-destaque" : ""}">
                                 ${item.status}</td>
                                 <td>${item.servico}</td>

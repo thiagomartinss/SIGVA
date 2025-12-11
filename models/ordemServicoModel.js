@@ -156,7 +156,7 @@ class OrdemServicoModel {
 
 
     /* RELATORIOS */
-    /*
+    
     async listarRelatorioOrdemServico(filtro) {
         let sql = `
         SELECT 
@@ -280,7 +280,7 @@ class OrdemServicoModel {
         }
 
         return listaRetorno;
-    }*/
+    }
 }
 
 module.exports = OrdemServicoModel;

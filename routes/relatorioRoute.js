@@ -10,8 +10,10 @@ router.get("/relatorioOsMarca", ctrl.relatorioOsMarca);
 router.get("/relatorioOsStatus", ctrl.relatorioOsStatus);
 router.get("/relatorioEstoque", ctrl.relatorioEstoque);
 router.get("/relatorioCliente", ctrl.relatorioCliente);
-
-router.get("/produtos", ctrl.listarProdutosRel);//relatorio produtos
+//relatorios
+router.get("/produtos", ctrl.listarProdutosRel);
 router.get("/pessoas",ctrl.listarPessoasRel);
-
+router.get("/relatorioStatus", ctrl.relatorioOrdemStatus);
+router.get("/relatorioPeriodo", ctrl.relatorioOrdemPeriodo);
+router.get("/relatorioMarca", ctrl.relatorioOrdemMarca);
 module.exports = router;

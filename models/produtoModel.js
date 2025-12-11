@@ -220,11 +220,14 @@ class ProdutoModel {
             INNER JOIN MARCA M
                 ON P.MARCA_ID_MARCA= M.ID_MARCA
         `;
+        if (filtro == 0) {
+            sql += ` WHERE P.QTD_ESTOQUE = 0`;
+        }
         if (filtro == 1) {
-            sql += `ORDER BY P.QTD_ESTOQUE DESC`;
+            sql += ` ORDER BY P.QTD_ESTOQUE DESC`;
         }
         if (filtro == 2) {
-            sql += `ORDER BY TP.TIPO_DESCRICAO ASC`;
+            sql += ` ORDER BY TP.TIPO_DESCRICAO ASC`;
         }
         var rows = await conexao.ExecutaComando(sql);
         let listaRetorno = [];

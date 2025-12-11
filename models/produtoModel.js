@@ -208,6 +208,28 @@ class ProdutoModel {
             tipoProdutoNome: this.#tipoProdutoNome
         }
     }
+
+    async listarPorNome(termo) {
+        let sql = "SELECT * FROM PRODUTO WHERE DESC_PRODUTO LIKE ? ORDER BY DESC_PRODUTO ASC";
+        let valores = [`%${termo}%`];
+        
+        let rows = await conexao.ExecutaComando(sql, valores);
+        
+        let listaRetorno = [];
+        if(rows.length > 0){
+            for(let i=0; i<rows.length; i++){
+                var row = rows[i];
+                
+                listaRetorno.push({
+                    id: row['ID_PRODUTO'],
+                    nome: row['DESC_PRODUTO'],
+                    valor: row['VALOR_VENDA']
+                });
+            }
+        }
+        return listaRetorno;
+    }
+
     //relatorio de produtos
     async listarRelatorioProduto(filtro) {
         let sql = `

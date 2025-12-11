@@ -140,7 +140,7 @@ class PessoaModel {
         return await conexao.ExecutaComandoNonQuery(sql, [id], connection);
     }
 
-    //formatando cnpj, cpf e telefone direto no backend
+
     docmask(valor) {
         if (!valor)
             return "";
@@ -166,23 +166,40 @@ class PessoaModel {
             return valor.replace(/^(\d{2})(\d{4})(\d{4}).*/, "($1) $2-$3");
         return valor;
     }
+
     async listarClientesPorNome(nome) {
-        let sql = ` 
-        SELECT P.ID_PESSOA, PF.NOME, E.LOGRADOURO,
-            E.NUMERO, E.BAIRRO, E.CEP, C.NOME_CID
+        let sql = `
+            SELECT 
+                P.ID_PESSOA,
+                P.EMAIL,
+                P.TELEFONE,
+                COALESCE(PF.NOME, PJ.NOME_FANTASIA) AS NOME_CLIENTE,
+                COALESCE(PF.CPF, PJ.CNPJ) AS DOCUMENTO,
+                E.ID_ENDERECO,
+                E.CEP,
+                E.LOGRADOURO,
+                E.NUMERO,
+                E.BAIRRO,
+                C.NOME_CID AS CIDADE,
+                U.SIGLA_UF AS ESTADO
             FROM PESSOA P
-            INNER JOIN PESSOA_FISICA PF
-                ON PF.ID_PESSOAFISICA = P.ID_PESSOA
-            INNER JOIN ENDERECO E
-                ON P.ENDERECO_ID_ENDERECO = E.ID_ENDERECO
-            INNER JOIN CIDADE C
-                ON E.ID_CIDADE = C.ID_CIDADE
-            WHERE PF.NOME LIKE ?`;
-        let valores = [`%${nome}%`];
-
-        return await conexao.ExecutaComando(sql, valores);
-
+            LEFT JOIN PESSOA_FISICA PF ON P.ID_PESSOA = PF.ID_PESSOAFISICA
+            LEFT JOIN PESSOA_JURIDICA PJ ON P.ID_PESSOA = PJ.ID_PESSOAJURIDICA
+            -- Mudei para LEFT JOIN aqui em baixo para garantir que traga o cliente mesmo sem endereço perfeito
+            LEFT JOIN ENDERECO E ON P.ENDERECO_ID_ENDERECO = E.ID_ENDERECO
+            LEFT JOIN CIDADE C ON E.ID_CIDADE = C.ID_CIDADE
+            LEFT JOIN UF U ON C.ID_UF = U.ID_UF
+            WHERE P.EH_CLIENTE = 1 
+            AND (PF.NOME LIKE ? OR PJ.NOME_FANTASIA LIKE ?)
+            ORDER BY NOME_CLIENTE ASC
+        `;
+        
+        let valores = [`%${nome}%`, `%${nome}%`];
+        let rows = await conexao.ExecutaComando(sql, valores);
+        return rows; 
     }
+
+
     async listarRelatorioPessoa(filtro) {
         let sql = `
             SELECT P.ID_PESSOA, P.EMAIL, P.TELEFONE, P.EH_CLIENTE, P.EH_FORNECEDOR,

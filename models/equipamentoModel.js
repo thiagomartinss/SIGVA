@@ -119,6 +119,30 @@ class EquipamentoModel {
         let result = await conexao.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
+
+    async listarPorNome(termo) {
+        // Busca por Nome OU Modelo
+        let sql = "SELECT * FROM EQUIPAMENTO WHERE DESC_EQUIPAMENTO LIKE ? OR MODEL_EQUIPAMENTO LIKE ?";
+        let valores = [`%${termo}%`, `%${termo}%`];
+
+        let rows = await conexao.ExecutaComando(sql, valores);
+        
+        let listaRetorno = [];
+        if(rows.length > 0){
+            for(let i=0; i<rows.length; i++){
+                var row = rows[i];
+                
+                // Objeto simples para não dar erro de undefined no front
+                listaRetorno.push({
+                    id: row['ID_EQUIPAMENTO'],
+                    nome: row['DESC_EQUIPAMENTO'],
+                    modelo: row['MODEL_EQUIPAMENTO'],
+                    estoque: row['QTD_EQUIPAMENTO']
+                });
+            }
+        }
+        return listaRetorno;
+    }
 }
 
 module.exports = EquipamentoModel;

@@ -284,6 +284,18 @@ class ProdutoController{
         }
     }
     
+    async buscarPorNome(req, res) {
+        let termo = req.params.nome;
+        
+        try {
+            let produto = new ProdutoModel();
+            let lista = await produto.listarPorNome(termo);
+            res.json({ produtos: lista });
+        } catch (error) {
+            console.error("Erro ao buscar produto:", error);
+            res.status(500).json({ ok: false, msg: "Erro no servidor" });
+        }
+    }
 }
 
 module.exports = ProdutoController;

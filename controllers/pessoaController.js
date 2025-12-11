@@ -215,13 +215,24 @@ class PessoaController {
             res.send({ ok: false, msg: "Erro ao excluir: " + error.message });
         }
     }
+    
     async buscarPorNome(req, res) {
         let nome = req.params.nome;
+        console.log("--- BUSCANDO CLIENTE ---");
+        console.log("Termo pesquisado:", nome);
 
-        let pessoa = new PessoaModel();
-        let lista = await pessoa.listarClientesPorNome(nome);
+        try {
+            let pessoa = new PessoaModel();
+            let lista = await pessoa.listarClientesPorNome(nome);
+            
+            console.log("Resultados encontrados:", lista.length);
+            console.log("Dados:", lista); 
 
-        res.json({ pessoas: lista });
+            res.json({ pessoas: lista });
+        } catch (error) {
+            console.error("Erro na busca:", error);
+            res.status(500).json({ ok: false, msg: "Erro no servidor" });
+        }
     }
 
 }

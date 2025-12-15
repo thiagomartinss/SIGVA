@@ -7,7 +7,7 @@ Este é um projeto acadêmico 🎓 do **Projeto Integrado III**, referente ao 3�
 🎯 **Objetivo:** Construir uma solução de software para o setor do agronegócio, simulando um sistema ecommerce com backoffice
 ---
 
-## ✨ Funcionalidades Planejadas
+## ✨ Funcionalidades Criadas
 
 O sistema completo (SIGVA) foi projetado para gerenciar todas as operações da empresa, incluindo:
 
